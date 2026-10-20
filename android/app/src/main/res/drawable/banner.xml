@@ -1,0 +1,11 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <size android:width="320dp" android:height="180dp" />
+            <solid android:color="#204712" />
+        </shape>
+    </item>
+    <item android:gravity="center" android:width="100dp" android:height="100dp">
+        <bitmap android:src="@drawable/icon" android:gravity="fill" android:filter="true" />
+    </item>
+</layer-list>

@@ -1,0 +1,13 @@
+{
+  "source": "stockmarket.js/src",
+  "hashes": {
+    "RoundReveal.tsx": "6386b69499a7a0ca2ff6551c462d42a21b19910d831c943ba01d690162f3493e",
+    "RoundOverview.tsx": "e91e4f5a4c6a97ae47ecfd914cef0bd006cc54d90554ea7e9ee96d839d4d7d7b",
+    "RoundWealth.tsx": "f280d85c297bc771599ad90103fc6658ddad5293fd68576fcb202fc09c55f96b",
+    "StockPriceChart.tsx": "8119c5df9fd4bd2212aea8c0e5eb8bb654b82e5896eb33125065ec4bc6c9c583",
+    "price-history.ts": "6c86cce19dcf2730eed7f1c740973950f97cfc623785e7a896b7c07da3713232",
+    "reveals.ts": "6409e670676cb502db459e35a67ded718ea670ee63b5077f53421ddd5f20bba4",
+    "round-preview.ts": "58f0e7b553015ec30ec95279b96b0fd212a6e268c431ba3fa872975da91eadf8",
+    "FeedMessage.tsx": "b38669f814d2341999e48eafe23fb5d1efc404199e39af6e723971b87516b8ec"
+  }
+}

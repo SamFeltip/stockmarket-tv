@@ -1,0 +1,8 @@
+{
+  "source": "stockmarket.js/public/static",
+  "hashes": {
+    "fonts/BigCaslon.ttf": "a422ba6e8853c4b199cf9b3a20f0e52549ea18f0cb66b83342780f12611a360a",
+    "stylesheets/styles.css": "99350c3fbc002b8eb03c83053cbc75d8bff53a08d1406a29ffd877c0d5186ae1",
+    "packages/bootstrap.min.css": "79c6c16248de0a232ef8a1ca427397939a94acddc1a05b57ce928fd4266543c3"
+  }
+}

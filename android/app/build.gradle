@@ -1,0 +1,28 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'com.stockmarket.tv'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'com.stockmarket.tv'
+        minSdk 23
+        targetSdk 35
+        versionCode 3
+        versionName '1.2.0'
+    }
+    buildFeatures { buildConfig true }
+    buildTypes { release { minifyEnabled false } }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+dependencies { implementation 'androidx.webkit:webkit:1.12.1' }
+// A build without a freshly bundled interface should fail clearly.
+tasks.register('verifyWebAssets') {
+    doLast {
+        if (!file('src/main/assets/web/index.html').exists()) {
+            throw new GradleException('Missing TV interface. Run npm run android:sync from stockmarket-tv first.')
+        }
+    }
+}
+tasks.named('preBuild').configure { dependsOn 'verifyWebAssets' }
