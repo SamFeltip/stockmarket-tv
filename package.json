@@ -1,13 +1,13 @@
 {
   "name": "stockmarket-tv",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "test": "vitest run",
+    "test": "vitest run src && npm run test:installer",
     "android:sync": "npm run build && node scripts/sync-android.mjs",
     "tv:install": "node scripts/install-tv.mjs",
     "test:installer": "node scripts/install-tv.test.mjs",

@@ -12,7 +12,8 @@ import { demo } from "./demo";
 import { asset, portrait } from "./assets";
 import { PlayAnimation } from "./PlayAnimation";
 import { RoundPresentation } from "./RoundPresentation";
-import { settledRevealSnapshot } from "./presentation";
+import { resultsBoard } from "./presentation";
+import { GameResults } from "./website/GameResults";
 
 export function errorMessage(error: unknown) {
     return error instanceof ConvexError ? String(error.data) : error instanceof Error ? error.message : "Something went wrong. Please try again.";
@@ -38,7 +39,7 @@ function CodeKeyboard({ onOpen, onCancel }: { onOpen: (code: string) => void; on
 }
 
 function DashboardScreen({ board, phoneUrl, token, onStart, busy, error, onBack, isDemo = false }: {
-    board: Board; phoneUrl: string; token?: string; onStart: () => void; busy: boolean; error: string; onBack: () => void; isDemo?: boolean;
+    board: Board; phoneUrl: string; token?: string; onStart: () => void; busy: boolean; error: string; onBack: () => void; isDemo?: boolean; onNext?: () => void;
 }) {
     const { game } = board;
     const waiting = game.status === "waiting";
@@ -87,29 +88,32 @@ function DashboardScreen({ board, phoneUrl, token, onStart, busy, error, onBack,
 
 export function GameScreen(props: Parameters<typeof DashboardScreen>[0]) {
     const { board } = props;
-    // Retain the public closing snapshot if the phone host advances while the
-    // TV is still reviewing it. New private cards never enter this snapshot.
-    const [round, setRound] = useState<Board | null>(() => board.reveal ? board : null);
-    if (board.reveal && board !== round) setRound(board);
-    const advanced = Boolean(round && (board.game.currentPeriod !== round.game.currentPeriod
-        || board.game.status === "playing" || board.game.status === "finished"));
     const view = props.isDemo ? new URLSearchParams(location.search).get("view") : null;
     return <>
-        {round ? <RoundPresentation key={`${round.game.code}-${round.game.currentPeriod}`} snapshot={advanced ? settledRevealSnapshot(round, board) : round} advanced={advanced}
-            onContinue={() => setRound(null)} onBack={props.onBack} overview={view === "summary"}/>
-            : <DashboardScreen {...props}/>}
-        <PlayAnimation board={board} preview={view === "play"}/>
+        {board.game.status === "finished" ? <main className="tv-results"><GameResults board={resultsBoard(board)} onBack={props.onBack}/></main>
+            : board.reveal ? <RoundPresentation key={`${board.game.code}-${board.game.currentPeriod}`} snapshot={board}
+                canAdvance={Boolean(props.token)} onNext={props.onNext ?? (() => {})} busy={props.busy} error={props.error}
+                onBack={props.onBack} overview={view === "summary"}/>
+                : <DashboardScreen {...props}/>}
+        <PlayAnimation key={`actions-${board.game.currentPeriod}`} board={board} preview={view === "play"}/>
     </>;
+
 }
 
 function LiveBoard({ entry, phoneUrl, onBack }: { entry: Recent; phoneUrl: string; onBack: () => void }) {
     const board = useQuery(tv.board, { code: entry.code });
     const start = useMutation(tv.start);
+    const next = useMutation(tv.next);
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState("");
     if (board === undefined) return <main className="center"><h1>Loading game…</h1><button onClick={onBack}>← Home</button></main>;
     if (board === null) return <main className="center"><h1>Game not found</h1><p>Check the lobby code. This game may have been removed.</p><button onClick={onBack}>← Home</button></main>;
-    return <GameScreen board={board} phoneUrl={phoneUrl} token={entry.token} busy={busy} error={error} onBack={onBack} onStart={() => {
+    return <GameScreen board={board} phoneUrl={phoneUrl} token={entry.token} busy={busy} error={error} onBack={onBack} onNext={() => {
+        if (!entry.token) return;
+        setBusy(true); setError("");
+        void next({ code: entry.code, token: entry.token, expectedPeriod: board.game.currentPeriod })
+            .catch((err: unknown) => setError(errorMessage(err))).finally(() => setBusy(false));
+    }} onStart={() => {
         if (!entry.token) return;
         setBusy(true); setError("");
         void start({ code: entry.code, token: entry.token }).catch((err: unknown) => setError(errorMessage(err))).finally(() => setBusy(false));
@@ -169,13 +173,18 @@ export function DemoScreen() {
     const back = useCallback(() => { window.location.search = ""; }, []);
     useRemote(back, "demo");
     const preview = new URLSearchParams(location.search).get("view");
-    const sample = preview === "lobby" ? { ...demo, game: { ...demo.game, status: "waiting" as const }, players: demo.players.slice(0, 4) }
-        : preview === "reveal" || preview === "summary" ? { ...demo, game: { ...demo.game, status: "closed" as const },
+    const [phase, setPhase] = useState(0);
+    const sample = preview === "finished" ? { ...demo, game: { ...demo.game, status: "finished" as const } } : preview === "lobby" ? { ...demo, game: { ...demo.game, status: "waiting" as const }, players: demo.players.slice(0, 4) }
+        : preview === "reveal" || preview === "summary" || preview === "flow" ? { ...demo, game: { ...demo.game, status: "closed" as const },
             reveal: { period: demo.game.currentPeriod, prices: demo.stocks.map((stock) => ({ stockKey: stock.key, value: stock.value })), suspended: [],
                 stocks: demo.stocks.map((stock) => ({ key: stock.key, name: stock.name, display: true,
                     imagePath: `/static/imgs/stocks/${["thf.png", "ub.png", "legal_and_general.svg", "thames.png", "S_and_S.png", "natwest.png"][stock.key - 7]}`,
                     secondaryImagePath: `/static/imgs/stocks/${["thf.png", "ub.png", "legal_and_general.svg", "thames.png", "S_and_S.png", "natwest.png"][stock.key - 7]}` })),
                 insights: demo.stocks.flatMap((stock, i) => [0, 1].map((n) => ({ _id: `${i}-${n}`, playerId: String(n + 1), stockKey: stock.key,
                     value: n ? -.25 : .5, description: `${stock.name} Insight ${n ? "-0.25" : "+0.5"}`, resolved: false }))) } } : demo;
-    return <GameScreen board={sample} phoneUrl="https://stockmarket.samfelton.com" token={preview === "lobby" ? "preview" : undefined} busy={false} error="" onStart={() => {}} onBack={back} isDemo/>;
+    const shown = phase ? { ...sample, reveal: null, game: { ...sample.game, status: "playing" as const, currentPeriod: demo.game.currentPeriod + phase } } : sample;
+    return <><GameScreen board={shown} phoneUrl="https://stockmarket.samfelton.com" token={["lobby", "reveal", "summary", "flow"].includes(preview ?? "") ? "preview" : undefined}
+        busy={false} error="" onStart={() => {}} onNext={() => setPhase((old) => old + 1)} onBack={back} isDemo/>
+        {preview === "flow" && phase === 0 && <button className="demo-next-period" onClick={() => setPhase(1)}>Preview: start next period</button>}
+    </>;
 }

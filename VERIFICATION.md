@@ -56,3 +56,19 @@ Final validation: six TV tests and five backend integration tests passed, backen
 ## Private network installer
 
 Dependency-free Node installer discovers connected ADB devices and mDNS wireless services, and probes TCP 5555 on bounded local/private IPv4 subnets. It supports selection, pairing, manual addresses, authorization, TV identity checks, data-preserving install and optional launch. Only the selected device is queried/installed. Eight installer tests passed. A portable ZIP was extracted and exercised end-to-end against an isolated fake ADB, verifying adjacent APK discovery, correct device serial, `install -r`, launch, and no uninstall. No physical TV installation was attempted during these checks.
+
+
+## Period control and game-over revision 1.3
+
+The creating TV token now authorizes `tv:next`, with common settlement logic extracted to `convex/advancePeriod.ts`. Phone `rounds:next` rejects TV-controlled games; phone-created games retain host controls. The controller can advance periods and finish the final period, with stale-period, wrong-token and pending-hold checks. No new schema migration or private fields are needed.
+
+AI jobs wait 4.3–5.3 seconds before deciding, allowing the previous 3.5-second action animation to complete. Both clients share timing constants; closing insight reveals wait until the final action plus a 500ms pause. The web now displays the same portrait/action animation across phase changes. New periods immediately replace all prior reveal screens; the TV no longer retains closing snapshots. RoundWealth displays holdings in the currently revealed tradable stock underneath each net worth.
+
+TV game-over uses the original GameResults, FinalHoldings, StockHistoryStrip and marquee components, with a TV navigation adapter and desktop layout at all TV viewport widths. Browser checks at 1280×720 confirmed all six portfolios fit, D-pad selection changes the active portfolio, and a demo period change interrupts unfinished reveals with no Continue button. Screenshots: docs/game-over-v1.3.jpg and docs/holdings-reveal-v1.3.jpg. The IAB ignored the requested 4K viewport override, which was reset; this revision's visual browser check is 1280×720. Existing proportional scaling remains in place.
+
+Targeted backend/phone tests: 14 passed, including a complete six-period TV-controlled game and the NPC timing floor. TV tests: 7 passed. Installer tests: 8 passed. Both frontend TypeScript/build checks passed; modified backend/phone source lint passed.
+
+
+Release validation: an additional 35 existing settlement/results/full-game tests passed, including all mixed human/AI whole-game simulations. Android assembleDebug/lintDebug passed with existing warnings. All 40 bundled web files match dist; signature matches the installed 1.2 key. APK version 1.3.0 / code 4 SHA-256: `792d88ee321a8cb1fdf00f29469a602094e68bea81249d7559a7de1311ab1c5f`. The private installer ZIP was refreshed to 1.3.0.
+
+Production: Convex deployed with schema validation and no deleted indexes. Phone Pages deployment: https://65fb8bf0.stockmarket-convex.pages.dev; stockmarket.samfelton.com returned 200 with the new production bundle. The public TV query reports tvControlled=true for the known TV lobby, with reveal=null while waiting; tv:next rejects a wrong token with `Only the controlling TV can advance the round` (Convex error data). The installer updated the physical Smart TV Pro at 192.168.1.235, preserving data. Device package verification confirms versionName=1.3.0 / versionCode=4, and MainActivity is the foreground activity. Its WebView version is 153.0.8010.36.

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { demo } from "./demo";
-import { newPlayEvents, settledRevealSnapshot, websiteBoard } from "./presentation";
+import { newPlayEvents, websiteBoard } from "./presentation";
 import { roundProgress } from "./website/round-preview";
 
 describe("public TV presentation", () => {
@@ -17,15 +17,6 @@ describe("public TV presentation", () => {
     });
     it("cannot build a reveal from a playing board without public insights", () => {
         expect(() => websiteBoard(demo)).toThrow("not public");
-    });
-    it("reconciles a hold decision when the phone host advances before the TV sees its update", () => {
-        const snapshot = { ...demo, reveal: { period: 2, prices: [{ stockKey: 7, value: 2 }], suspended: [],
-            stocks: [{ key: 7, display: true, name: "Trusthouse Forte", imagePath: "", secondaryImagePath: "" }],
-            insights: [{ _id: "a", playerId: "1", stockKey: 7, value: 1, description: "Change", resolved: false }] } };
-        const reconciled = settledRevealSnapshot(snapshot, { ...demo, history: [{ period: 3, prices: [{ stockKey: 7, value: 2 }] }] });
-        expect(reconciled.reveal?.suspended).toEqual([7]);
-        expect(reconciled.reveal?.insights[0].resolved).toBe(true);
-        expect(snapshot.reveal.insights[0].resolved).toBe(false);
     });
     it("uses website settlement progressively, including cash insights and held prices", () => {
         const board = websiteBoard({ ...demo, reveal: {

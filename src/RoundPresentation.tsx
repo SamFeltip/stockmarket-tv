@@ -5,10 +5,11 @@ import { revealStocks } from "./website/reveals";
 import { roundProgress } from "./website/round-preview";
 import { RoundReveal } from "./website/RoundReveal";
 import { RoundOverview } from "./website/RoundOverview";
+import { useRevealReady } from "./website/use-reveal-ready";
 import { RoundWealth } from "./website/RoundWealth";
 
-export function RoundPresentation({ snapshot, advanced, onContinue, onBack, overview = false }: {
-    snapshot: Board; advanced: boolean; onContinue: () => void; onBack: () => void; overview?: boolean;
+export function RoundPresentation({ snapshot, canAdvance, onNext, busy, error, onBack, overview = false }: {
+    snapshot: Board; canAdvance: boolean; onNext: () => void; busy: boolean; error: string; onBack: () => void; overview?: boolean;
 }) {
     const board = websiteBoard(snapshot);
     const groups = revealStocks(board.stocks, board.insights);
@@ -19,12 +20,18 @@ export function RoundPresentation({ snapshot, advanced, onContinue, onBack, over
     const unresolved = stock?.name === "Hold Stock Price" ? visible.find((insight) => !insight.resolved) : undefined;
     const owner = board.players.find((player) => player._id === unresolved?.playerId);
     const reviewed = step >= groups.length;
+    const lastPlay = snapshot.feed.find((item) => item.period === snapshot.game.currentPeriod
+        && item.colour !== "grey" && (item.quantity || item.message === "passed their go"));
+    const ready = useRevealReady(lastPlay?.at);
+    const pendingHolds = board.insights.some((insight) => !insight.resolved
+        && board.stocks.find((item) => item.key === insight.stockKey)?.name === "Hold Stock Price");
     const { preview, wealth } = roundProgress(board, step, index);
     useEffect(() => {
-        if (unresolved || index >= visible.length || reviewed) return;
+        if (!ready || unresolved || index >= visible.length || reviewed) return;
         const timer = window.setTimeout(() => setIndex((current) => current + 1), 2500);
         return () => window.clearTimeout(timer);
-    }, [index, visible.length, unresolved, step, reviewed]);
+    }, [index, visible.length, unresolved, step, reviewed, ready]);
+    if (!ready) return <main className="center"><h1>End of round</h1><p>Revealing insights shortly…</p></main>;
     return <main className="website-presentation">
         <div className="round-end gap-3 p-4 d-grid">
             <div className="d-flex flex-column align-items-center justify-content-center">
@@ -48,12 +55,16 @@ export function RoundPresentation({ snapshot, advanced, onContinue, onBack, over
                             <div>£{(preview.game.prices.find((price) => price.stockKey === item.key)?.value ?? 0).toFixed(2)}</div>
                         </div>)}
                     </div>
-                </div><RoundWealth players={wealth.players}/>
+                </div><RoundWealth players={wealth.players} stock={stock}/>
             </>}
             <div id="next-step-wrapper" className="round-navigation p-3 d-flex gap-3 align-items-center" style={{animation:"none"}}>
                 <button className="btn btn-secondary" onClick={onBack}>Back</button>
-                {reviewed ? advanced ? <button className="btn btn-primary" onClick={onContinue}>Continue to game →</button>
-                    : <p>Waiting for the game creator to continue.</p>
+                {error && <p className="error" role="alert">{error}</p>}
+                {reviewed ? canAdvance ? <>
+                    {pendingHolds && <p>Waiting for players to resolve their hold-stock insights.</p>}
+                    <button className="btn btn-primary" disabled={busy || pendingHolds} onClick={onNext}>
+                        {busy ? "Starting…" : board.game.currentPeriod >= board.game.periodCount ? "Finish Game" : "Next Period"} →
+                    </button></> : <p>{snapshot.game.tvControlled ? "Waiting for the controlling TV to continue." : "Waiting for the game creator to continue."}</p>
                     : <button className="btn btn-primary" disabled={Boolean(unresolved)} onClick={() => {
                         if (index < visible.length) setIndex(visible.length);
                         else { setStep((old) => old + 1); setIndex(0); }

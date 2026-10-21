@@ -70,3 +70,34 @@ h1#stockmarket-header{font-family:"Stockmarket Caslon",serif}
 .feed-system{padding:.4rem;background:#ddd}
 .feed-entries .trade-message{display:flex;align-items:center;gap:.3rem;font-size:1rem;flex-wrap:wrap}
 .feed-entries .trade-message img{width:1.5rem;height:1.5rem;object-fit:contain}
+
+.website-presentation .round-player-holdings{font-size:.65rem;text-align:center}
+.tv-results{height:100vh;overflow:hidden;color:white}
+.tv-results .game-results{height:100vh;min-height:0;padding:1rem 2.5vw;gap:.75rem;grid-template-areas:"heading" "main" "histories" "footer";grid-template-rows:auto minmax(0,1fr) auto auto;color:white;border:0}
+.tv-results .results-main{display:grid;min-height:0;grid-template-columns:minmax(0,1fr) minmax(0,1.65fr);gap:.75rem}
+.tv-results .results-leaderboard{grid-auto-rows:max-content;gap:.55rem}
+.tv-results .results-leaderboard .result-player-button{background:#0f2c12;color:white;padding:.65rem}
+.tv-results .results-leaderboard .is-selected .result-player-button{background:white;color:#111}
+.tv-results .results-leaderboard .accordion-button::after{display:none}
+.tv-results .result-player-button>img{width:3rem}
+.tv-results .result-player-button strong{font-size:1.15rem}
+.tv-results .result-player-button>span:last-child>span{font-size:.85rem}
+.tv-results .portfolio-panes{display:grid;min-width:0;min-height:0}
+.tv-results .portfolio-panes>.desktop-player-portfolio{display:grid;grid-area:1/1;pointer-events:none;grid-template-rows:auto auto minmax(0,1fr);padding:.75rem}
+.tv-results .portfolio-panes>.desktop-player-portfolio.active{pointer-events:auto;z-index:1}
+.tv-results .desktop-player-portfolio>h2{font-size:1.5rem}
+.tv-results .desktop-player-portfolio>p{font-size:.85rem;margin-bottom:.7rem}
+.tv-results .desktop-player-portfolio .final-holdings{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
+.tv-results .desktop-player-portfolio .final-holding{display:flex;flex-direction:column;justify-content:center;padding:.5rem}
+.tv-results .final-holding img{height:3rem}
+.tv-results .final-holding h3{font-size:1rem}
+.tv-results .final-holding p{font-size:.85rem}
+.tv-results .mobile-player-portfolio,.tv-results .mobile-empty-portfolio{display:none}
+.tv-results .history-card{width:20rem}
+.tv-results .history-chart img{height:2.5rem}
+.tv-results .history-chart svg{height:3.5rem}
+.tv-results .results-heading h1{font-size:2.5rem}
+.tv-results .history-viewport:focus-visible{outline:.15rem solid #fff284;outline-offset:.15rem}
+.tv-results footer{justify-content:center}
+
+.demo-next-period{position:fixed;top:.5rem;right:.5rem;z-index:1100;font-size:.7rem;background:#fff284;color:#111}

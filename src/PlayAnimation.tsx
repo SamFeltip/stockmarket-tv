@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { Board } from "./api";
 import { portrait, stockLogo } from "./assets";
 import { FeedMessage } from "./website/FeedMessage";
+import { actionAnimationMs } from "./website/timing";
 import { newPlayEvents } from "./presentation";
 
 export function PlayAnimation({ board, preview = false }: { board: Board; preview?: boolean }) {
@@ -15,7 +16,7 @@ export function PlayAnimation({ board, preview = false }: { board: Board; previe
     const active = state.queue[0];
     useEffect(() => {
         if (!active) return;
-        const timer = window.setTimeout(() => setState((old) => ({ ...old, queue: old.queue.slice(1) })), 3500);
+        const timer = window.setTimeout(() => setState((old) => ({ ...old, queue: old.queue.slice(1) })), actionAnimationMs);
         return () => window.clearTimeout(timer);
     }, [active]);
     if (!active) return null;

@@ -1,6 +1,5 @@
 import type { Board } from "./api";
-import { asset, portrait } from "./assets";
-import { roundPrices } from "./website/settlement";
+import { asset, portrait, stockLogo } from "./assets";
 import type { Board as WebsiteBoard } from "./website/types";
 
 export function websiteBoard(board: Board): WebsiteBoard {
@@ -22,16 +21,15 @@ export function newPlayEvents(board: Board, previousId?: string, previousAt = In
         || item.message === "passed their go")).reverse();
 }
 
-// Host advancement proves all hold decisions are resolved. Reconcile a missed
-// hold update using the public settlement history before finishing the reveal.
-export function settledRevealSnapshot(snapshot: Board, latest: Board): Board {
-    if (!snapshot.reveal) return snapshot;
-    const reveal = snapshot.reveal;
-    const settled = latest.history.find((entry) => entry.period === reveal.period + 1)?.prices;
-    const expected = roundPrices(reveal.prices, reveal.insights, reveal.stocks, []);
-    const suspended = settled ? expected.filter((price) =>
-        settled.some((actual) => actual.stockKey === price.stockKey && actual.value !== price.value))
-        .map((price) => price.stockKey) : reveal.suspended;
-    return { ...snapshot, reveal: { ...reveal, suspended,
-        insights: reveal.insights.map((insight) => ({ ...insight, resolved: true })) } };
+export function resultsBoard(board: Board): WebsiteBoard {
+    const ranked = [...board.players].sort((a, b) => b.netWorth - a.netWorth);
+    return {
+        game: { ...board.game, prices: board.stocks.map((stock) => ({ stockKey: stock.key, value: stock.value })),
+            suspended: [], priceHistory: board.history },
+        stocks: board.stocks.map((stock) => ({ key: stock.key, name: stock.name, display: true,
+            imagePath: stockLogo(stock.key, stock.imagePath), secondaryImagePath: stockLogo(stock.key, stock.imagePath) })),
+        insights: [], players: board.players.map(({ id, profileRoot, ...player }) => ({ ...player,
+            _id: id, profileRoot: portrait(profileRoot), ranking: ranked.findIndex((item) => item.id === id) + 1 })),
+        feed: board.feed,
+    };
 }
