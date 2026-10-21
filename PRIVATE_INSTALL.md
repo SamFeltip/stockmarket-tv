@@ -2,12 +2,150 @@
 
 No app store is required. Install on your own and friends' Android TV / Google TV or **Fire OS** TVs using the interactive local-network installer. The supplied APK is version 1.3.0. Fire TVs running **Vega OS** cannot install this Android APK.
 
-## What you need
+## What you need to install an existing APK
 
 - A compatible TV, awake, on the same Wi-Fi or Ethernet LAN as the computer.
 - **Node.js 22+** on the computer ([download](https://nodejs.org/en/download)).
 - **Android SDK Platform-Tools** (`adb`) on the computer ([official downloads for Windows, macOS and Linux](https://developer.android.com/tools/releases/platform-tools)). Android Studio is not required. This project's local SDK is already detected on this computer.
 - The built `app-debug.apk` (already present in this project) and the installer script. You do not need `npm install`, a local web server, or a TV player account.
+
+## From git clone to installed on a TV
+
+Use this route to build the current source on a new laptop. Generated APKs, bundled web assets and local toolchains are ignored by Git, so a fresh clone needs a build before installation. The `android/` source project and Gradle wrapper belong in Git.
+
+### Install the build tools
+
+Install Git, Node.js **22.18+**, **JDK 17**, and [Android Studio](https://developer.android.com/studio). In Android Studio's SDK Manager, install:
+
+- Android SDK Platform 35
+- Android SDK Build-Tools 35.0.0
+- Android SDK Platform-Tools
+- Android SDK Command-line Tools (latest)
+
+Use the SDK location displayed in SDK Manager for `ANDROID_HOME`, and the installed JDK 17 directory for `JAVA_HOME`. Gradle downloads its pinned version automatically; no separate Gradle installation is required.
+
+### Clone and configure
+
+```sh
+git clone https://github.com/SamFeltip/stockmarket-tv.git
+cd stockmarket-tv
+npm ci
+cp .env.example .env.local
+```
+
+On Windows PowerShell, replace the last command with:
+
+```powershell
+Copy-Item .env.example .env.local
+```
+
+The example environment uses the existing live configuration:
+
+```dotenv
+VITE_CONVEX_URL=https://effervescent-flamingo-244.convex.cloud
+VITE_PHONE_URL=https://stockmarket.samfelton.com
+```
+
+This configuration needs no local phone server or backend deployment. The TV and phones need internet access. If changing these values, both apps must use the same Convex backend, and the phone URL must be reachable from phones.
+
+### Configure Java and the Android SDK
+
+On Linux/macOS, adjust these paths to match your installations:
+
+```sh
+# Typical Linux SDK location:
+export ANDROID_HOME="$HOME/Android/Sdk"
+
+# On macOS, use this instead:
+# export ANDROID_HOME="$HOME/Library/Android/sdk"
+
+# Replace with your installed JDK 17 directory:
+export JAVA_HOME="/path/to/jdk-17"
+
+export PATH="$JAVA_HOME/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+```
+
+On Windows PowerShell, adjust these paths instead:
+
+```powershell
+$env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"
+$env:JAVA_HOME = "C:\path\to\jdk-17"
+$env:Path = "$env:JAVA_HOME\bin;$env:ANDROID_HOME\platform-tools;$env:ANDROID_HOME\cmdline-tools\latest\bin;$env:Path"
+```
+
+These settings apply to the current terminal. Save them in your shell profile or Windows user environment settings to reuse them in future terminals.
+
+Verify the tools and accept the SDK licences:
+
+```sh
+java -version
+adb version
+sdkmanager --licenses
+```
+
+Java should report version 17. In PowerShell, use `sdkmanager.bat --licenses` for the last command.
+
+### Build the APK
+
+From the `stockmarket-tv` project root on Linux/macOS:
+
+```sh
+npm run android:sync
+cd android
+./gradlew assembleDebug
+cd ..
+```
+
+On Windows PowerShell:
+
+```powershell
+npm run android:sync
+cd android
+.\gradlew.bat assembleDebug
+cd ..
+```
+
+The APK is generated at `android/app/build/outputs/apk/debug/app-debug.apk`. `android:sync` builds the web interface and copies it into the Android project's assets. Run it again and rebuild after changing the interface or `.env.local`; the URLs are embedded in the APK.
+
+### Install and launch on the TV
+
+Connect the laptop and TV to the same LAN, keep the TV awake, and enable its debugging access using the Fire TV or Android TV instructions below. Then, from the project root:
+
+```sh
+npm run tv:install
+```
+
+Select your TV and approve the debugging prompt on its screen. If Android wireless pairing is required, choose **P**, enter the pairing address and code, then select the TV's connection address. The connection port is usually different from the pairing port.
+
+Alternatively, supply the TV address directly:
+
+```sh
+# Fire TV or network debugging on port 5555:
+npm run tv:install -- 192.168.1.50
+
+# Android wireless debugging: use the connection port shown on the TV:
+npm run tv:install -- 192.168.1.50:37123
+```
+
+The installer installs the APK and opens Stockmarket TV. Repeat for each TV. After installation, the laptop can be switched off; each TV connects directly to the hosted backend.
+
+### Install future updates
+
+From the project root on Linux/macOS:
+
+```sh
+git pull
+npm ci
+npm run android:sync
+cd android
+./gradlew assembleDebug
+cd ..
+npm run tv:install
+```
+
+On Windows, use `.\gradlew.bat assembleDebug` instead of `./gradlew assembleDebug`.
+
+Updates must use the same signing key as the installed APK. When moving build machines, preserve the original debug keystore (normally `~/.android/debug.keystore`, or `%USERPROFILE%\.android\debug.keystore` on Windows). A fresh laptop normally generates a different debug key, which cannot update an existing installation signed by the old key. For long-term distribution, use and securely back up a permanent release signing key. Uninstalling to resolve a signature mismatch erases recent games and the TV's lobby control tokens.
 
 ## Prepare a Fire TV
 
