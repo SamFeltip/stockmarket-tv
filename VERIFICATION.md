@@ -72,3 +72,14 @@ Targeted backend/phone tests: 14 passed, including a complete six-period TV-cont
 Release validation: an additional 35 existing settlement/results/full-game tests passed, including all mixed human/AI whole-game simulations. Android assembleDebug/lintDebug passed with existing warnings. All 40 bundled web files match dist; signature matches the installed 1.2 key. APK version 1.3.0 / code 4 SHA-256: `792d88ee321a8cb1fdf00f29469a602094e68bea81249d7559a7de1311ab1c5f`. The private installer ZIP was refreshed to 1.3.0.
 
 Production: Convex deployed with schema validation and no deleted indexes. Phone Pages deployment: https://65fb8bf0.stockmarket-convex.pages.dev; stockmarket.samfelton.com returned 200 with the new production bundle. The public TV query reports tvControlled=true for the known TV lobby, with reveal=null while waiting; tv:next rejects a wrong token with `Only the controlling TV can advance the round` (Convex error data). The installer updated the physical Smart TV Pro at 192.168.1.235, preserving data. Device package verification confirms versionName=1.3.0 / versionCode=4, and MainActivity is the foreground activity. Its WebView version is 153.0.8010.36.
+
+
+## Layout and trade fixes — 22 October 2026 / version 1.3.1
+
+TV gameplay, reveal, summary, lobby and game-over previews fit 1920×1080, 3840×2160 and 1280×720 with no page overflow. Summary players and navigation occupy separate rows; animated wealth changes have their own reserved line. D-pad selection and visible focus borders were checked on period and final-player selectors. Public TV stock lists now use the corrected catalog volatility order, matching every phone list.
+
+Phone checks at 375px, 390px and desktop verify the centred animated portfolio toggle, responsive Pass placement, Cancel and a single confirmed pass mutation using a local fixture. The final modal contains only its title and two footer buttons; mobile Buy, Sell and Pass all measure 44px high. Trades and legal actions now permit every 1,000-share increment within funds and holdings.
+
+Validation: 125 web/backend tests, 7 TV tests and 8 installer tests passed; web lint, both production builds, asset validation, Android assembleDebug and lintDebug passed. APK version 1.3.1 / code 5; bundled assets match dist byte for byte. The portable installer is refreshed as private-install/stockmarket-tv-v1.3.1.zip.
+
+Production Convex deployed successfully with schema validation and no deleted indexes. Cloudflare deployment https://a1189736.stockmarket-convex.pages.dev and https://stockmarket.samfelton.com both returned 200 with the new build and confirmed production backend URL. Physical TV update was unavailable: no ADB devices were attached and the previously used 192.168.1.235:5555 returned No route to host.

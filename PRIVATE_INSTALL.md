@@ -1,6 +1,6 @@
 # Install Stockmarket TV privately
 
-No app store is required. Install on your own and friends' Android TV / Google TV or **Fire OS** TVs using the interactive local-network installer. The supplied APK is version 1.3.0. Fire TVs running **Vega OS** cannot install this Android APK.
+No app store is required. Install on your own and friends' Android TV / Google TV or **Fire OS** TVs using the interactive local-network installer. The supplied APK is version 1.3.1. Fire TVs running **Vega OS** cannot install this Android APK.
 
 ## What you need to install an existing APK
 
@@ -226,7 +226,7 @@ After installation, launch it from the TV's apps list. You can turn ADB debuggin
 
 ## Share with friends
 
-The portable ZIP is at `private-install/stockmarket-tv-v1.3.0.zip`. It contains `install-tv.mjs`, `app-debug.apk` and a short README. Extract all three into one folder. With Node.js and Platform-Tools installed, run:
+The portable ZIP is at `private-install/stockmarket-tv-v1.3.1.zip`. It contains `install-tv.mjs`, `app-debug.apk` and a short README. Extract all three into one folder. With Node.js and Platform-Tools installed, run:
 
 ```sh
 node install-tv.mjs
