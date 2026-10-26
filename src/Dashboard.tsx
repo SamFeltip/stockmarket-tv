@@ -7,6 +7,8 @@ export const money = (value: number) => new Intl.NumberFormat("en-GB", {
     style: "currency", currency: "GBP", maximumFractionDigits: 0,
 }).format(value);
 const count = (n: number) => new Intl.NumberFormat("en-GB", { notation: "compact", maximumFractionDigits: 1 }).format(n);
+// Increasing volatility: THF, UB, L&G, Thames, S&S, Natwest.
+const volatilityOrder = [7, 8, 9, 10, 11, 12];
 
 function PriceLine({ board, stockKey }: { board: Board; stockKey: number }) {
     const values = board.history.map((entry) => entry.prices.find((p) => p.stockKey === stockKey)?.value)
@@ -51,6 +53,8 @@ export function Feed({ board }: { board: Board }) {
 }
 
 export function Dashboard({ board, phoneUrl }: { board: Board; phoneUrl: string }) {
+    const stocks = [...board.stocks].sort((a, b) =>
+        (volatilityOrder.indexOf(a.key) + 1 || Infinity) - (volatilityOrder.indexOf(b.key) + 1 || Infinity));
     const ranked = [...board.players].sort((a, b) => b.netWorth - a.netWorth);
     const latest = board.latestPurchase;
     const total = board.players.reduce((sum, player) => sum + player.netWorth, 0);
@@ -59,7 +63,7 @@ export function Dashboard({ board, phoneUrl }: { board: Board; phoneUrl: string 
     return <div className="dashboard">
         <section className="market-section">
             <div className="section-heading"><h2>Stocks</h2><span>Price per share · GBP</span></div>
-            <div className="stocks">{board.stocks.map((stock) => {
+            <div className="stocks">{stocks.map((stock) => {
                 const change = stock.value - stock.startingValue;
                 return <article className="stock card" key={stock.key}>
                     <div className="stock-title"><img src={stockLogo(stock.key, stock.imagePath)} alt={stock.name}/><h3>{stock.name}</h3></div>
@@ -71,10 +75,10 @@ export function Dashboard({ board, phoneUrl }: { board: Board; phoneUrl: string 
         </section>
         <section className="portfolios card">
             <div className="section-heading"><h2>{finished ? "Final standings" : "Player portfolios"}</h2><span>Ranked by total wealth</span></div>
-            <table><thead><tr><th>Player</th><th>Cash</th>{board.stocks.map((s) => <th key={s.key}><img className="table-logo" src={stockLogo(s.key, s.imagePath)} alt={s.name}/></th>)}<th>Net worth</th></tr></thead>
+            <table><thead><tr><th>Player</th><th>Cash</th>{stocks.map((s) => <th key={s.key}><img className="table-logo" src={stockLogo(s.key, s.imagePath)} alt={s.name}/></th>)}<th>Net worth</th></tr></thead>
                 <tbody>{ranked.map((player, index) => <tr key={player.id} className={board.game.currentPlayerId === player.id && !finished ? "current" : ""}>
                     <th><div className="player-cell"><span className="rank">{index + 1}</span><img className="player-avatar" src={portrait(player.profileRoot)} alt=""/><span>{player.name}</span>{board.game.currentPlayerId === player.id && !finished ? <span className="turn-dot"/> : null}</div></th>
-                    <td>{money(player.cash)}</td>{board.stocks.map((stock) => <td key={stock.key}>{count(player.holdings.find((h) => h.stockKey === stock.key)?.quantity ?? 0)}</td>)}
+                    <td>{money(player.cash)}</td>{stocks.map((stock) => <td key={stock.key}>{count(player.holdings.find((h) => h.stockKey === stock.key)?.quantity ?? 0)}</td>)}
                     <td className="wealth">{money(player.netWorth)}</td>
                 </tr>)}</tbody></table><p className="table-note">Holdings in shares · Net worth = cash + shares at current prices</p>
         </section>
