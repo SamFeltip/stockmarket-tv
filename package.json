@@ -11,7 +11,8 @@
     "android:sync": "npm run build && node scripts/sync-android.mjs",
     "tv:install": "node scripts/install-tv.mjs",
     "test:installer": "node scripts/install-tv.test.mjs",
-    "theme:sync": "node scripts/sync-theme.mjs"
+    "theme:sync": "node scripts/sync-theme.mjs",
+    "android:debug": "node scripts/build-android.mjs"
   },
   "dependencies": {
     "convex": "^1.42.0",

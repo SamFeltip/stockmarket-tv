@@ -83,3 +83,9 @@ Phone checks at 375px, 390px and desktop verify the centred animated portfolio t
 Validation: 125 web/backend tests, 7 TV tests and 8 installer tests passed; web lint, both production builds, asset validation, Android assembleDebug and lintDebug passed. APK version 1.3.1 / code 5; bundled assets match dist byte for byte. The portable installer is refreshed as private-install/stockmarket-tv-v1.3.1.zip.
 
 Production Convex deployed successfully with schema validation and no deleted indexes. Cloudflare deployment https://a1189736.stockmarket-convex.pages.dev and https://stockmarket.samfelton.com both returned 200 with the new build and confirmed production backend URL. Physical TV update was unavailable: no ADB devices were attached and the previously used 192.168.1.235:5555 returned No route to host.
+
+## Fire Stick development sideload workflow — 31 October 2026
+
+Added `npm run android:debug` to build the interface, sync Android assets, assemble the development APK and run Android lint through the tracked Gradle wrapper. Added `FIRE_TV.md` for fresh-clone setup, Fire OS ADB installation, remote checks and updates preserving app data. Corrected README remote instructions and removed assumptions that ignored APK/ZIP outputs exist in a clone. Appstore publishing is outside this workflow.
+
+Validation on Linux: 8 TV tests and 9 installer tests passed, including Fire TV recognition through `amazon.hardware.fire_tv` when no TV/leanback characteristic is reported. The new build command completed TypeScript/Vite, `assembleDebug` and `lintDebug`; APK signature verification passed, and all packaged web files match dist byte-for-byte. Windows/macOS command paths are implemented but were not executed here. No physical Fire Stick installation or remote/WebView validation was performed.

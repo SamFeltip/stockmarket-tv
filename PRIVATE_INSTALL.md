@@ -1,13 +1,13 @@
 # Install Stockmarket TV privately
 
-No app store is required. Install on your own and friends' Android TV / Google TV or **Fire OS** TVs using the interactive local-network installer. The supplied APK is version 1.3.1. Fire TVs running **Vega OS** cannot install this Android APK.
+No app store is required. Install on your own and friends' Android TV / Google TV or **Fire OS** TVs using the interactive local-network installer. Build the current source using the steps below; APKs are generated locally and are not committed. Fire TVs running **Vega OS** cannot install this Android APK.
 
 ## What you need to install an existing APK
 
 - A compatible TV, awake, on the same Wi-Fi or Ethernet LAN as the computer.
 - **Node.js 22+** on the computer ([download](https://nodejs.org/en/download)).
 - **Android SDK Platform-Tools** (`adb`) on the computer ([official downloads for Windows, macOS and Linux](https://developer.android.com/tools/releases/platform-tools)). Android Studio is not required. This project's local SDK is already detected on this computer.
-- The built `app-debug.apk` (already present in this project) and the installer script. You do not need `npm install`, a local web server, or a TV player account.
+- A built `app-debug.apk` and the installer script. You do not need `npm install`, a local web server, or a TV player account.
 
 ## From git clone to installed on a TV
 
@@ -147,6 +147,8 @@ On Windows, use `.\gradlew.bat assembleDebug` instead of `./gradlew assembleDebu
 
 Updates must use the same signing key as the installed APK. When moving build machines, preserve the original debug keystore (normally `~/.android/debug.keystore`, or `%USERPROFILE%\.android\debug.keystore` on Windows). A fresh laptop normally generates a different debug key, which cannot update an existing installation signed by the old key. For long-term distribution, use and securely back up a permanent release signing key. Uninstalling to resolve a signature mismatch erases recent games and the TV's lobby control tokens.
 
+For the shortest Fire Stick development workflow, see [FIRE_TV.md](FIRE_TV.md).
+
 ## Prepare a Fire TV
 
 1. Open **Settings → My Fire TV** (sometimes **Device & Software**) **→ About**.
@@ -226,7 +228,7 @@ After installation, launch it from the TV's apps list. You can turn ADB debuggin
 
 ## Share with friends
 
-The portable ZIP is at `private-install/stockmarket-tv-v1.3.1.zip`. It contains `install-tv.mjs`, `app-debug.apk` and a short README. Extract all three into one folder. With Node.js and Platform-Tools installed, run:
+Create a folder containing `scripts/install-tv.mjs` and the generated `android/app/build/outputs/apk/debug/app-debug.apk`, plus these setup instructions. You can ZIP that folder for sharing. Generated bundles under `private-install/` are ignored by Git. Extract the files together into one folder. With Node.js and Platform-Tools installed, run:
 
 ```sh
 node install-tv.mjs

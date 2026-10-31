@@ -54,13 +54,14 @@ test('scans once per host, returns only open ADB candidates, and enforces total 
     await assert.rejects(scanHosts(Array.from({ length: 1025 }, (_, i) => String(i)), async () => false), /1024/);
 });
 
-function fakeAdb({ authorized = true, tv = true, installCode = 0, launchError = false } = {}) {
+function fakeAdb({ authorized = true, tv = true, features = '', installCode = 0, launchError = false } = {}) {
     const calls = [];
     return { calls, run: async (_adb, args, options) => {
         calls.push({ args, options });
         if (args.includes('get-state')) return authorized ? ok('device\n') : { code: 1, stdout: '', stderr: 'unauthorized' };
         if (args.includes('ro.product.model')) return ok('Test TV');
         if (args.includes('ro.build.characteristics')) return ok(tv ? 'tv' : 'phone');
+        if (args.includes('features')) return ok(features);
         if (args.includes('install')) return { code: installCode, stdout: '', stderr: installCode ? 'INSTALL_FAILED_UPDATE_INCOMPATIBLE' : '' };
         if (args.includes('start') && launchError) return ok('Error: Activity not found');
         return ok();
@@ -91,4 +92,13 @@ test('failed update never uninstalls or launches; no-launch leaves the TV undist
     const success = fakeAdb();
     await installSelected('/adb', 'tv', '/apk', { run: success.run, launch: false });
     assert(!success.calls.some((call) => call.args.includes('am')));
+});
+
+
+test('recognizes Fire TV by its Amazon feature without a leanback characteristic', async () => {
+    const fake = fakeAdb({ tv: false, features: 'feature:amazon.hardware.fire_tv\n' });
+    await installSelected('/adb', '192.168.1.50:5555', '/fire-tv.apk', { run: fake.run });
+    assert.deepEqual(fake.calls.find((call) => call.args.includes('install')).args,
+        ['-s', '192.168.1.50:5555', 'install', '-r', '/fire-tv.apk']);
+    assert(fake.calls.some((call) => call.args.includes('com.stockmarket.tv/.MainActivity')));
 });

@@ -16,7 +16,7 @@ Use `?demo=1&view=lobby` to preview a populated lobby and `?demo=1` to preview t
 
 The game feed occupies the right sidebar and scrolls using Up/Down when focused; move down past its end to reach Back. The bottom row contains the QR code, combined wealth (winner after completion), and latest purchase. Stock arrows show price movement since the start of the game. The full-screen play animation uses the player's portrait, name, stock logo and action, with the website's 3.5-second fade. New buys, sells and passes are queued chronologically; opening an existing game does not replay its old feed.
 
-When trading closes, the TV uses vendored copies of the website's `RoundReveal`, `RoundOverview`, `RoundWealth`, `StockPriceChart`, `FeedMessage`, and settlement/preview logic. Insights reveal every 2.5 seconds; use the remote's yellow button to skip to the stock result, advance stocks and view the summary. Hold decisions remain on the owner's phone. For TV-created games, the creating TV remote starts the next period or finishes the game after the summary; phone hosts cannot override this. All clients immediately return to play when a new period starts, abandoning unfinished reveal progress. Use `?demo=1&view=play`, `?demo=1&view=reveal` or `?demo=1&view=summary` to preview these views. `node scripts/sync-presentation.mjs` refreshes the copied website components; TV adapters stay separate.
+When trading closes, the TV uses vendored copies of the website's `RoundReveal`, `RoundOverview`, `RoundWealth`, `StockPriceChart`, `FeedMessage`, and settlement/preview logic. Insights reveal every 2.5 seconds; use the on-screen button with D-pad and Select to skip to the stock result, advance stocks and view the summary. Hold decisions remain on the owner's phone. For TV-created games, the creating TV remote starts the next period or finishes the game after the summary; phone hosts cannot override this. All clients immediately return to play when a new period starts, abandoning unfinished reveal progress. Use `?demo=1&view=play`, `?demo=1&view=reveal` or `?demo=1&view=summary` to preview these views. `node scripts/sync-presentation.mjs` refreshes the copied website components; TV adapters stay separate.
 
 The layout scales proportionally at 1920×1080 and 3840×2160, with vector charts, QR codes, and text rendering at the WebView’s available pixel density. The same layout also fits the smaller logical viewport used by high-density TV devices. Physical UI output resolution is controlled by the device OS: some 4K TVs render app interfaces at 1080p and upscale them ([Android documentation](https://developer.android.com/reference/android/view/Display.Mode#getPhysicalWidth())). No display-mode or refresh-rate change is forced.
 
@@ -71,23 +71,20 @@ For local LAN testing, run `npm run dev:frontend` in `../stockmarket.js` and set
 
 For a development backend update, run `npx convex dev --once` in `../stockmarket.js`. For production, use that project's documented deployment workflow so the phone frontend and backend update together. This project does not publish either app automatically.
 
-## Build and install on a TV
+## Build and sideload on a TV
 
 Install Android Studio (with JDK 17 and Android SDK Platform 35 / Build Tools 35), accept the Android SDK license, and configure `ANDROID_HOME` or `android/local.properties` with your SDK path.
 
 ```sh
 npm ci
 # Configure .env.local for the intended backend and phone frontend first.
-npm run android:sync
-cd android
-./gradlew assembleDebug
-adb connect YOUR_TV_IP:5555
-adb install -r app/build/outputs/apk/debug/app-debug.apk
+npm run android:debug
+npm run tv:install -- YOUR_TV_IP
 ```
 
-`android:sync` builds the interface and copies `dist/` into Android assets. Run it after interface **or environment** changes. The Android build fails clearly if those assets are missing. On Fire TV, enable ADB debugging in Developer Options and approve the computer. Debug builds can be sideloaded; distribution requires your own release signing key. No signing key is committed.
+`android:debug` builds and bundles the interface, assembles the debug APK and runs Android lint. It works on Linux, macOS and Windows. `android:sync` builds the interface and copies `dist/` into Android assets. Run it after interface **or environment** changes. The Android build fails clearly if those assets are missing. On Fire TV, enable ADB debugging in Developer Options and approve the computer. Debug builds can be sideloaded directly. Keep the same debug signing key for future updates; no signing key is committed.
 
-Run `npm run tv:install` to discover available debugging devices on your LAN, select a TV, install the existing APK and open it. It works on Linux, macOS and Windows with Node.js 22+ and Android SDK Platform-Tools. This computer's project-local ADB is detected automatically. For direct connection use `npm run tv:install -- YOUR_TV_IP`; wireless Android debugging with a custom port and pairing is supported. See [PRIVATE_INSTALL.md](PRIVATE_INSTALL.md) for TV setup, pairing, network options and a portable private-sharing bundle.
+Run `npm run tv:install` to discover available debugging devices on your LAN, select a TV, install the existing APK and open it. It works on Linux, macOS and Windows with Node.js 22+ and Android SDK Platform-Tools. This computer's project-local ADB is detected automatically. For direct connection use `npm run tv:install -- YOUR_TV_IP`; wireless Android debugging with a custom port and pairing is supported. For Fire Stick sideloading from a fresh clone, see [FIRE_TV.md](FIRE_TV.md). See [PRIVATE_INSTALL.md](PRIVATE_INSTALL.md) for TV setup, pairing, network options and a portable private-sharing bundle.
 
 You can also open `android/` directly in Android Studio and use Build APK. Both `LAUNCHER` and `LEANBACK_LAUNCHER`, a TV banner, landscape orientation and optional touch/leanback features are provided. The app keeps the display awake while visible and blocks navigation away from its bundled HTTPS origin.
 
