@@ -7,7 +7,7 @@ const files = ["RoundReveal.tsx", "RoundOverview.tsx", "RoundWealth.tsx", "Stock
 const hashes = {};
 for (const file of files) {
     const original = await readFile(new URL(`src/${file}`, source), "utf8");
-    await writeFile(new URL(file, target), original.replaceAll('"../shared/settlement"', '"./settlement"').replaceAll('"../shared/presentation"', '"./timing"').replaceAll('"react-router-dom"', '"./navigation"').replaceAll('(min-width: 992px)', '(min-width: 0px)'));
+    await writeFile(new URL(file, target), original.replaceAll('"../shared/settlement"', '"./settlement"').replaceAll('"../shared/presentation"', '"./timing"').replaceAll('"react-router-dom"', '"./navigation"').replaceAll('(min-width: 992px)', '(min-width: 0px)').replaceAll('.toSorted(', '.slice().sort('));
     hashes[file] = createHash("sha256").update(original).digest("hex");
 }
 await writeFile(new URL("settlement.ts", target), await readFile(new URL("shared/settlement.ts", source)));

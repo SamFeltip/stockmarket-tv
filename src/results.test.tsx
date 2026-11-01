@@ -1,10 +1,25 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { demo } from "./demo";
 import { resultsBoard } from "./presentation";
 import { GameScreen } from "./App";
+import { RoundOverview } from "./website/RoundOverview";
+import { previewRound } from "./website/round-preview";
 
 describe("TV game over", () => {
+    it("renders results and round summaries on older WebViews without toSorted", () => {
+        const unsupported = vi.spyOn(Array.prototype, "toSorted").mockImplementation(() => {
+            throw new Error("toSorted is unavailable on this WebView");
+        });
+        try {
+            const before = resultsBoard(demo);
+            const after = previewRound(before, [], []);
+            expect(renderToStaticMarkup(<RoundOverview before={before} after={after}/>)).toContain("Sam");
+            expect(renderToStaticMarkup(<GameScreen board={{ ...demo, game: { ...demo.game, status: "finished" } }}
+                phoneUrl="https://stockmarket.samfelton.com" onStart={()=>{}} onBack={()=>{}} busy={false} error=""/>))
+                .toContain("Sam wins!");
+        } finally { unsupported.mockRestore(); }
+    });
     it("adapts final public rankings, holdings and prices to the original website components", () => {
         const board = resultsBoard({ ...demo, game: { ...demo.game, status: "finished" } });
         expect(board.insights).toEqual([]);

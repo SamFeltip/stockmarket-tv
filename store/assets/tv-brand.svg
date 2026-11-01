@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+<rect width="1280" height="720" fill="#204712"/>
+<path d="M100 570H1180" stroke="#789564" stroke-width="2"/>
+<text x="640" y="335" text-anchor="middle" font-family="DejaVu Serif,serif" font-size="112" fill="white">Stockmarket!</text>
+<text x="640" y="425" text-anchor="middle" font-family="DejaVu Sans,sans-serif" font-size="48" letter-spacing="12" fill="#fff284">TV</text>
+<text x="640" y="535" text-anchor="middle" font-family="DejaVu Sans,sans-serif" font-size="28" fill="white">Your market. Your friends. Your next move.</text></svg>

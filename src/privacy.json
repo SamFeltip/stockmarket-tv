@@ -1,0 +1,32 @@
+{
+  "title": "Stockmarket TV privacy policy",
+  "updated": "1 November 2026",
+  "contact": "mail.samfelton@gmail.com",
+  "sections": [
+    {
+      "heading": "Who operates the app",
+      "text": "Stockmarket TV is operated by Sam Felton. For support, privacy questions, or a request to access or delete your data, email mail.samfelton@gmail.com. Stockmarket is a multiplayer game using fictional money; it does not provide real investing or gambling."
+    },
+    {
+      "heading": "Data used on your TV",
+      "text": "You do not sign in or create an account on the TV. The app stores up to twelve recent lobby codes and the secret control tokens for lobbies created on that TV in local app storage. When you create or control a lobby, its code, game settings and control token are sent over HTTPS to our Convex backend. The backend stores a SHA-256 hash of the control token. Watching a game sends its lobby code to the backend to receive live public game data."
+    },
+    {
+      "heading": "Phone accounts and public games",
+      "text": "Scanning a QR code opens stockmarket.samfelton.com on your phone. Joining as a player requires a separate phone account with a username, chosen avatar and password. The authentication service stores password verification data. Do not put personal information in your username. Player names, selected avatars, portfolios, trades, results and revealed cards are visible to anyone who knows the lobby code. Open-period private insight cards are not sent to the TV."
+    },
+    {
+      "heading": "Why data is used and who processes it",
+      "text": "We use this data to run multiplayer games, authenticate phone players, restore recent games and protect TV controls. Convex processes backend data and network requests; Cloudflare hosts the phone website and processes requests to it. These providers may process technical connection information such as IP addresses and service logs to operate and protect their services, including outside your country. The TV app includes no advertising or analytics SDK, does not sell personal information, and does not request your contacts, microphone, camera or precise location. QR codes are generated locally."
+    },
+    {
+      "heading": "Storage, deletion and your choices",
+      "text": "Game records persist on the backend so that past games can be viewed; this version does not automatically expire them. Local recent-game entries are replaced as more games are opened. Clearing the TV app data or uninstalling removes its locally stored codes and tokens, but does not delete backend games or your phone account. Losing a TV control token prevents that TV from controlling its existing games. For requests concerning backend game data or a phone account, contact mail.samfelton@gmail.com; we may need to verify that the data or account belongs to you. Please do not send your password or TV control token."
+    },
+    {
+      "id": "deletion",
+      "heading": "Request account or data deletion",
+      "text": "To request deletion, email mail.samfelton@gmail.com with the subject Stockmarket deletion request. Include your Stockmarket username and, if relevant, lobby codes. Say whether you want your phone account and associated personal data deleted, or only specific game data while keeping your account. You do not need the TV app installed to make a request. Do not send your password or TV control token. Requests are handled manually: we will reply with any ownership-verification steps, an expected completion time, and confirmation when the request is completed. Account deletion covers account/authentication records and associated personal game data, rather than simply disabling sign-in. Any information that needs to be retained, its reason and retention period will be explained during the request process. Clearing TV storage is separate from this backend deletion request."
+    }
+  ]
+}

@@ -14,6 +14,7 @@ import { PlayAnimation } from "./PlayAnimation";
 import { RoundPresentation } from "./RoundPresentation";
 import { resultsBoard } from "./presentation";
 import { GameResults } from "./website/GameResults";
+import privacy from "./privacy.json";
 
 export function errorMessage(error: unknown) {
     return error instanceof ConvexError ? String(error.data) : error instanceof Error ? error.message : "Something went wrong. Please try again.";
@@ -152,7 +153,14 @@ export function App({ phoneUrl }: { phoneUrl: string }) {
         <Boundary key={entry?.code ?? mode} onBack={back}>{entry ? <LiveBoard entry={entry} phoneUrl={phoneUrl} onBack={back}/> : <main className="home">
             <div className="home-card container rounded card card-green">
                 <header className="card-header"><h1 id="stockmarket-header">Stockmarket!</h1><h2>Welcome to stockmarket</h2></header>
-                {mode === "watch" ? <CodeKeyboard onCancel={back} onOpen={(code) => open(recent.find((item) => item.code === code) ?? { code })}/> : <>
+                {mode === "privacy" ? <>
+                    <h2>{privacy.title}</h2>
+                    <div className="policy-content" tabIndex={0} role="region" aria-label="Privacy policy; use Up and Down to scroll">
+                        <p>Updated {privacy.updated} · Use ↑ ↓ to scroll.</p>
+                        {privacy.sections.map((section) => <section key={section.heading}><h3>{section.heading}</h3><p>{section.text}</p></section>)}
+                    </div>
+                    <button className="btn btn-secondary" onClick={back}>Back</button>
+                </> : mode === "watch" ? <CodeKeyboard onCancel={back} onOpen={(code) => open(recent.find((item) => item.code === code) ?? { code })}/> : <>
                     <div className="home-content card-body">
                         <section className="home-controls bg-dark rounded"><h2>Create a game</h2><p>Game length</p>
                             <div className="lengths" role="group" aria-label="Number of periods">{[6, 7, 8, 9, 10].map((n) => <button key={n} className="btn" aria-pressed={periods === n} onClick={() => setPeriods(n)} disabled={busy}>{n}</button>)}</div>
@@ -163,6 +171,9 @@ export function App({ phoneUrl }: { phoneUrl: string }) {
                     </div>
                     {recent.length ? <section className="recents"><h3>Recent games</h3><div>{recent.map((item) => <button className="btn bg-dark" key={item.code} disabled={busy} onClick={() => open(item)}>{item.code.toUpperCase()}</button>)}</div></section> : null}
                     <p className="home-hint">Create a game with your remote, then scan the QR code to join on your phone.</p>
+                    <div className="home-information"><p>4–6 players · Phones and internet required · Fictional money</p>
+                        <button className="btn btn-secondary" onClick={() => setMode("privacy")}>Privacy &amp; support</button>
+                        <button className="btn btn-secondary" onClick={() => { location.search = "?demo=1"; }}>Preview game</button></div>
                 </>}
             </div><footer><span>Stockmarket! · TV</span><span>↑ ↓ ← → Navigate · OK Select</span></footer>
         </main>}</Boundary>

@@ -21,7 +21,7 @@ export function RoundOverview({ before, after }: { before: Board; after: Board }
                 ))}
             </div>
             <div className="round-overview-players">
-                {after.players.toSorted((a, b) => b.netWorth - a.netWorth).map((player) =>
+                {after.players.slice().sort((a, b) => b.netWorth - a.netWorth).map((player) =>
                 {
                     const previous = before.players.find((item) => item._id === player._id)?.netWorth ?? 0;
                     const change = player.netWorth - previous;

@@ -1,0 +1,31 @@
+{
+  "title": "Stockmarket TV",
+  "shortDescription": "Bring your multiplayer stockmarket game to the big screen. Trade on your phone.",
+  "description": "Turn your TV into the shared board for Stockmarket, a multiplayer game of market moves, private insights and changing fortunes.\n\nCreate a lobby with your TV remote, scan the QR code on your phone and join your friends. Follow stock prices, public portfolios, trades and player rankings together on the big screen. Private insight cards stay on each player's phone until the market closes.\n\nChoose a game lasting 6–10 periods. Watch the market reveal, see how everyone performed and use the creating TV to move to the next period. Revisit completed games using a lobby code or the recent games saved on your TV.\n\nFeatures:\n• Shared market board for 4–6 player seats\n• Remote-controlled lobby creation and game progression\n• QR code joining through the companion phone website\n• Live prices, portfolios, activity and rankings\n• End-of-period reveals, charts and final results\n• No ads or in-app purchases\n\nAn internet connection is required. Human players use a phone browser at stockmarket.samfelton.com and create a free account to trade. The TV does not take a player seat or require a TV login. The included preview shows sample gameplay without creating a live game.\n\nStockmarket uses fictional money. It does not offer real-money investing, financial advice, wagering or cash prizes.",
+  "supportEmail": "mail.samfelton@gmail.com",
+  "website": "https://stockmarket.samfelton.com",
+  "privacyPolicy": "https://stockmarket.samfelton.com/tv-privacy.html",
+  "language": "en-GB",
+  "pricing": "Free",
+  "ads": false,
+  "inAppPurchases": false,
+  "suggestedGoogleCategory": "Game / Board",
+  "suggestedAmazonCategory": "Games / Board",
+  "amazonFeatures": [
+    "Create a stockmarket game with your TV remote",
+    "Scan a QR code and trade using your phone browser",
+    "Follow live prices, public portfolios and player rankings",
+    "Watch market reveals, price charts and final results",
+    "Play with fictional money, without ads or in-app purchases"
+  ],
+  "amazonKeywords": [
+    "stockmarket",
+    "party game",
+    "board game",
+    "multiplayer",
+    "strategy",
+    "stocks"
+  ],
+  "releaseNotes": "First store release for Android TV, Google TV and Fire TV running Fire OS. Includes remote controls, phone joining, live game displays, market reveals, final results, in-app privacy information and a sample-game preview.",
+  "accountAndDataDeletion": "https://stockmarket.samfelton.com/tv-privacy.html#deletion"
+}

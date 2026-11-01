@@ -11,3 +11,4 @@ android/app/src/main/assets/web/
 .toolchain/
 
 private-install/
+.release/

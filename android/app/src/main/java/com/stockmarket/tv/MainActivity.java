@@ -2,13 +2,11 @@ package com.stockmarket.tv;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
@@ -24,7 +22,6 @@ public final class MainActivity extends Activity {
     @SuppressLint("SetJavaScriptEnabled")
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN
             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         web = new WebView(this);
@@ -82,10 +79,7 @@ public final class MainActivity extends Activity {
     @Override public void onBackPressed() {
         web.evaluateJavascript("document.documentElement.dataset.tvScreen || 'home'", result -> {
             if ("\"home\"".equals(result)) {
-                new AlertDialog.Builder(this).setTitle("Leave Stockmarket TV?")
-                    .setMessage("Your game will keep running. You can return to it from recent games.")
-                    .setNegativeButton("Stay", (dialog, which) -> web.requestFocus())
-                    .setPositiveButton("Exit", (dialog, which) -> finish()).show();
+                finish();
             } else {
                 web.evaluateJavascript("document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}))", null);
             }

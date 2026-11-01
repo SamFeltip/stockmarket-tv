@@ -4,6 +4,8 @@ A separate Android TV / Google TV and Amazon Fire TV **Fire OS** project using t
 
 The interface is bundled into a small Android WebView application, served from a local HTTPS asset origin. Convex subscriptions supply live game data; no TV web hosting or Google Play Services is required. The interface can also run in a browser for development.
 
+For signed Google Play and Amazon Appstore releases, store materials and submission status, see [PUBLISHING.md](PUBLISHING.md). Development APKs below are for private sideloading.
+
 ## Website theme (version 1.1)
 
 The TV uses the website's original Bootstrap stylesheet and `styles.css`, Big Caslon title font, Inter body font, company logos, movement icons, player portraits, and app icon. These assets are vendored under `public/static/`, so the app remains standalone and loads its visuals from the APK. `npm run theme:sync` refreshes the original assets from the sibling website project; preserve the separately bundled Inter regular font and OFL license.
@@ -86,7 +88,7 @@ npm run tv:install -- YOUR_TV_IP
 
 Run `npm run tv:install` to discover available debugging devices on your LAN, select a TV, install the existing APK and open it. It works on Linux, macOS and Windows with Node.js 22+ and Android SDK Platform-Tools. This computer's project-local ADB is detected automatically. For direct connection use `npm run tv:install -- YOUR_TV_IP`; wireless Android debugging with a custom port and pairing is supported. For Fire Stick sideloading from a fresh clone, see [FIRE_TV.md](FIRE_TV.md). See [PRIVATE_INSTALL.md](PRIVATE_INSTALL.md) for TV setup, pairing, network options and a portable private-sharing bundle.
 
-You can also open `android/` directly in Android Studio and use Build APK. Both `LAUNCHER` and `LEANBACK_LAUNCHER`, a TV banner, landscape orientation and optional touch/leanback features are provided. The app keeps the display awake while visible and blocks navigation away from its bundled HTTPS origin.
+You can also open `android/` directly in Android Studio and use Build APK. Both `LAUNCHER` and `LEANBACK_LAUNCHER`, a TV banner, landscape orientation and optional touch/leanback features are provided. The app follows the TV's normal idle/ambient behavior and blocks navigation away from its bundled HTTPS origin. Back from the home screen exits directly.
 
 Targets Android 6 / API 23+ with a current WebView, including Android TV / Google TV and Android-based Fire OS devices (Fire OS 6+). Fire TV devices running **Vega OS** cannot install Android APKs and need a separate Vega application. Apple TV is outside this project.
 

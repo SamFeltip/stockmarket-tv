@@ -40,6 +40,15 @@ export function useRemote(onBack: () => void, screen: string) {
                 event.preventDefault(); onBack(); return;
             }
             if (!event.key.startsWith("Arrow")) return;
+            const policy = (document.activeElement as Element | null)?.closest<HTMLElement>(".policy-content");
+            if (policy && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
+                const down = event.key === "ArrowDown";
+                if (down ? policy.scrollTop + policy.clientHeight < policy.scrollHeight - 1 : policy.scrollTop > 0) {
+                    event.preventDefault();
+                    policy.scrollBy({ top: policy.clientHeight * (down ? .65 : -.65) });
+                    return;
+                }
+            }
             const history = (document.activeElement as Element | null)?.closest<HTMLElement>(".history-viewport");
             if (history && (event.key === "ArrowLeft" || event.key === "ArrowRight")) {
                 event.preventDefault();

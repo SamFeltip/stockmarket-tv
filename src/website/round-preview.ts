@@ -11,7 +11,7 @@ export function previewRound(board: Board, insights: Insight[], revealedStockKey
 
         return { ...player, cash, netWorth: portfolioWorth({ ...player, cash }, prices) };
     });
-    const ranked = players.toSorted((a, b) => b.netWorth - a.netWorth);
+    const ranked = players.slice().sort((a, b) => b.netWorth - a.netWorth);
     const history = board.game.priceHistory ?? [{ period: board.game.currentPeriod, prices: board.game.prices }];
 
     return { ...board,

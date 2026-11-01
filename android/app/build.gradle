@@ -1,4 +1,9 @@
 plugins { id 'com.android.application' }
+def signingValues = ['STOCKMARKET_KEYSTORE', 'STOCKMARKET_STORE_PASSWORD', 'STOCKMARKET_KEY_ALIAS', 'STOCKMARKET_KEY_PASSWORD'].collectEntries { [(it): System.getenv(it)] }
+def hasReleaseSigning = signingValues.values().every { it }
+if (gradle.startParameter.taskNames.any { it.toLowerCase().contains('release') } && !hasReleaseSigning) {
+    throw new GradleException('Release signing is required. Use npm run android:release; see PUBLISHING.md.')
+}
 android {
     namespace 'com.stockmarket.tv'
     compileSdk 35
@@ -6,11 +11,21 @@ android {
         applicationId 'com.stockmarket.tv'
         minSdk 23
         targetSdk 35
-        versionCode 5
-        versionName '1.3.1'
+        versionCode 6
+        versionName '1.4.0'
     }
     buildFeatures { buildConfig true }
-    buildTypes { release { minifyEnabled false } }
+    signingConfigs {
+        release {
+            if (hasReleaseSigning) {
+                storeFile file(signingValues.STOCKMARKET_KEYSTORE)
+                storePassword signingValues.STOCKMARKET_STORE_PASSWORD
+                keyAlias signingValues.STOCKMARKET_KEY_ALIAS
+                keyPassword signingValues.STOCKMARKET_KEY_PASSWORD
+            }
+        }
+    }
+    buildTypes { release { minifyEnabled false; signingConfig signingConfigs.release } }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
