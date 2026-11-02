@@ -1,3 +1,6 @@
+import { RolePortrait } from "./website/RolePortrait";
+import { TradeRoleLabel } from "./website/TradeRole";
+import { CompanyHolding } from "./website/CompanyHolding";
 import { QRCodeSVG } from "qrcode.react";
 import type { Board } from "./api";
 import { joinUrl } from "./storage";
@@ -44,8 +47,8 @@ export function Feed({ board }: { board: Board }) {
             }
         }}>
             {board.feed.length ? board.feed.map((item) => <article key={item.id}>
-                <img className={`feed-avatar${item.colour === "grey" ? " feed-system" : ""}`} src={portrait(item.imageRoot || board.players.find((player) => player.name === item.title)?.profileRoot)} alt=""/>
-                <div><h3>{item.title}</h3><FeedMessage item={item} stocks={board.stocks.map((stock) => ({ ...stock, display: true,
+                {item.roleAfter ? <div className="trade-avatar"><RolePortrait name={item.title} profileRoot={portrait(item.imageRoot)} role={item.roleAfter}/></div> : <img className={`feed-avatar${item.colour === "grey" ? " feed-system" : ""}`} src={portrait(item.imageRoot || board.players.find((player) => player.name === item.title)?.profileRoot)} alt=""/>}
+                <div><h3>{item.title}</h3><TradeRoleLabel role={item.roleAfter}/><FeedMessage item={item} stocks={board.stocks.map((stock) => ({ ...stock, display: true,
                     imagePath: stockLogo(stock.key, stock.imagePath), secondaryImagePath: stockLogo(stock.key, stock.imagePath) }))}/></div>
             </article>) : <p>Game activity will appear here.</p>}
         </div>
@@ -78,7 +81,7 @@ export function Dashboard({ board, phoneUrl }: { board: Board; phoneUrl: string 
             <table><thead><tr><th>Player</th><th>Cash</th>{stocks.map((s) => <th key={s.key}><img className="table-logo" src={stockLogo(s.key, s.imagePath)} alt={s.name}/></th>)}<th>Net worth</th></tr></thead>
                 <tbody>{ranked.map((player, index) => <tr key={player.id} className={board.game.currentPlayerId === player.id && !finished ? "current" : ""}>
                     <th><div className="player-cell"><span className="rank">{index + 1}</span><img className="player-avatar" src={portrait(player.profileRoot)} alt=""/><span>{player.name}</span>{board.game.currentPlayerId === player.id && !finished ? <span className="turn-dot"/> : null}</div></th>
-                    <td>{money(player.cash)}</td>{stocks.map((stock) => <td key={stock.key}>{count(player.holdings.find((h) => h.stockKey === stock.key)?.quantity ?? 0)}</td>)}
+                    <td>{money(player.cash)}</td>{stocks.map((stock) => <td key={stock.key}><CompanyHolding quantity={count(player.holdings.find((h) => h.stockKey === stock.key)?.quantity ?? 0)} role={player.roles?.find((item) => item.stockKey === stock.key)?.role} company={stock.name}/></td>)}
                     <td className="wealth">{money(player.netWorth)}</td>
                 </tr>)}</tbody></table><p className="table-note">Holdings in shares · Net worth = cash + shares at current prices</p>
         </section>

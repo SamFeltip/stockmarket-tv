@@ -1,11 +1,14 @@
 import { makeFunctionReference } from "convex/server";
 
+export type CompanyRole = "chairman" | "director";
+
 export type PublicReveal = {
     period: number;
     prices: { stockKey: number; value: number }[];
     suspended: number[];
     stocks: { key: number; name: string; display: boolean; imagePath: string; secondaryImagePath: string }[];
-    insights: { _id: string; playerId: string; stockKey: number; value: number; description: string; resolved: boolean }[];
+    insights: { _id: string; playerId: string; stockKey: number; value: number; description: string; resolved: boolean;
+        bonusRole?: CompanyRole; removedInsightId?: string }[];
 };
 export type Board = {
     reveal?: PublicReveal | null;
@@ -14,10 +17,10 @@ export type Board = {
         tvControlled?: boolean; currentPeriod: number; periodCount: number; turn: number; currentPlayerId?: string };
     stocks: { key: number; name: string; imagePath?: string; startingValue: number; value: number; held: number }[];
     players: { id: string; name: string; profileRoot?: string; cash: number; netWorth: number;
-        holdings: { stockKey: number; quantity: number }[] }[];
+        holdings: { stockKey: number; quantity: number }[]; roles?: { stockKey: number; role: CompanyRole }[] }[];
     history: { period: number; prices: { stockKey: number; value: number }[] }[];
     feed: { id: string; at: number; period: number; title: string; message: string;
-        imageRoot?: string; colour?: string; stockKey?: number; quantity?: number }[];
+        imageRoot?: string; colour?: string; stockKey?: number; quantity?: number; roleBefore?: CompanyRole; roleAfter?: CompanyRole }[];
 };
 
 export const tv = {

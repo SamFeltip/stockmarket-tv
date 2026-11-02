@@ -1,3 +1,4 @@
+import { RolePortrait } from "./website/RolePortrait";
 import { useEffect, useState } from "react";
 import type { Board } from "./api";
 import { portrait, stockLogo } from "./assets";
@@ -23,7 +24,7 @@ export function PlayAnimation({ board, preview = false }: { board: Board; previe
     const player = board.players.find((candidate) => candidate.name === active.title);
     return <div key={active.id} id="play-notif" className="play-notification d-flex justify-content-center align-items-center" role="status" aria-live="polite">
         <div className="d-flex flex-column align-items-center text-center gap-3">
-            <img className="rounded" src={portrait(active.imageRoot || player?.profileRoot)} alt={active.title}/>
+            <RolePortrait name={active.title} profileRoot={portrait(active.imageRoot || player?.profileRoot)} role={active.roleAfter}/>
             <h1>{active.title}</h1>
             <FeedMessage item={active} stocks={board.stocks.map((stock) => ({ ...stock, display: true,
                 imagePath: stockLogo(stock.key, stock.imagePath), secondaryImagePath: stockLogo(stock.key, stock.imagePath) }))} detailed/>

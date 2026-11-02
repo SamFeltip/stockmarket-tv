@@ -2,15 +2,15 @@
 
 ## Release artifacts
 
-Package: `com.stockmarket.tv`, version `1.4.0`, version code `6`, minimum API 23, target API 35. This release supports Android TV / Google TV and Android-based Fire OS. Vega OS requires a separate VPKG application and is not covered by these binaries.
+Package: `com.stockmarket.tv`, version `1.5.0`, version code `7`, minimum API 23, target API 35. This release supports Android TV / Google TV and Android-based Fire OS. Vega OS requires a separate VPKG application and is not covered by these binaries.
 
 The Android application contains Java and bundled web assets, with no native `.so` libraries. It does not restrict CPU ABIs; the OS-provided WebView supplies its native runtime. No Google Play Services are required.
 
 `npm run android:release` builds the production UI, signed APK, signed AAB and Android release lint report, then verifies signatures and writes:
 
-- `.release/1.4.0/stockmarket-tv-1.4.0-google-play.aab` — Google Play upload.
-- `.release/1.4.0/stockmarket-tv-1.4.0-amazon.apk` — Amazon Fire OS upload.
-- `.release/1.4.0/SHA256SUMS` — artifact checksums.
+- `.release/1.5.0/stockmarket-tv-1.5.0-google-play.aab` — Google Play upload.
+- `.release/1.5.0/stockmarket-tv-1.5.0-amazon.apk` — Amazon Fire OS upload.
+- `.release/1.5.0/SHA256SUMS` — artifact checksums.
 
 Signing material is in ignored `.release/stockmarket-tv.jks` and `.release/signing.json`. **Back up both files securely together.** They are necessary for subsequent Amazon updates and for upload-key continuity. Do not commit them or upload them as store assets. Keep generated binaries outside Git too. Never replace an existing production signing key with a debug key. Existing privately sideloaded debug builds have a different certificate and cannot be updated in place with this release; do not uninstall them without considering loss of local TV game controls.
 
