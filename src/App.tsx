@@ -1,3 +1,5 @@
+import { RightsDemo } from "./RightsDemo";
+import { RightsIssueScreen } from "./RightsIssueScreen";
 import { SuspensionDemo } from "./SuspensionDemo";
 import { Component, useCallback, useState } from "react";
 import type { ReactNode } from "react";
@@ -92,6 +94,7 @@ export function GameScreen(props: Parameters<typeof DashboardScreen>[0]) {
     const { board } = props;
     const view = props.isDemo ? new URLSearchParams(location.search).get("view") : null;
     const Presentation = props.isDemo ? RoundPresentation : ConnectedRoundPresentation;
+    if (board.game.rightsIssue) return <RightsIssueScreen board={board}/>;
     return <>
         {board.game.status === "finished" ? <main className="tv-results"><GameResults board={resultsBoard(board)} onBack={props.onBack}/></main>
             : board.reveal ? <Presentation key={`${board.game.code}-${board.game.currentPeriod}`} snapshot={board}
@@ -187,6 +190,7 @@ export function DemoScreen() {
     useRemote(back, "demo");
     const preview = new URLSearchParams(location.search).get("view");
     const [phase, setPhase] = useState(0);
+    if (preview === "rights") return <RightsDemo onBack={back}/>;
     if (preview === "suspend") return <SuspensionDemo onBack={back}/>;
     const sample = preview === "finished" ? { ...demo, game: { ...demo.game, status: "finished" as const } } : preview === "lobby" ? { ...demo, game: { ...demo.game, status: "waiting" as const }, players: demo.players.slice(0, 4) }
         : preview === "reveal" || preview === "summary" || preview === "flow" ? { ...demo, game: { ...demo.game, status: "closed" as const },

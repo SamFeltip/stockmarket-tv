@@ -3,7 +3,7 @@
   "hashes": {
     "RoundReveal.tsx": "23754b7157fbbf375c1a2a622e4d2ff718abab37cbf2c188f99d3c174c2992cc",
     "RoundOverview.tsx": "07189cbcf0ce95bce70bc2f28428307a50d15e080ddabbefb2a106b4650fb682",
-    "RoundWealth.tsx": "696f453e0059c0a6ac8e20a2b08b40f0b800d725a1745a1b38cf7be5432531b5",
+    "RoundWealth.tsx": "03100b35fcea59c9604df9c78a17b1356bca3c2c3907e0aadac14658d9665b18",
     "StockPriceChart.tsx": "8119c5df9fd4bd2212aea8c0e5eb8bb654b82e5896eb33125065ec4bc6c9c583",
     "price-history.ts": "6c86cce19dcf2730eed7f1c740973950f97cfc623785e7a896b7c07da3713232",
     "reveals.ts": "f1065d37b02532b1761253af56bbc2923f6158d5002b8fa2ef516d7ecf93a5d5",
@@ -22,7 +22,13 @@
     "CompanyHolding.tsx": "7efdd90fa55eeb878b7ccb10675302cc02fe06552dec1971ec1338bc2612ed10",
     "TradeRole.tsx": "06b6715aa2928cc0778e6ed3167ec4be0155e7f0e8e4798bfc93efcd208f17e9",
     "CashReveal.tsx": "ae84022e37dd6fe5c0ed11373d566aa5092adb6bd13fc4823d376e5482d49231",
-    "ShareSuspended.tsx": "2a2607ec5babdeefd36b929d682e6164d7031cdc87bf9890f6c0b75260e4466f",
-    "SelectionTick.tsx": "48ffe6e69c490d777cce10e31d6f57041da01500a62e62d4c594364ca992d643"
+    "ShareSuspended.tsx": "82f9f22a306e9d163e0b0f857648003e7c06030963c5a258efc2b27ca96570ff",
+    "SelectionTick.tsx": "48ffe6e69c490d777cce10e31d6f57041da01500a62e62d4c594364ca992d643",
+    "RightsIssue.tsx": "459de9751d634c01446e4de6305662e31911ba802ed5231242a76d7e95153b43",
+    "GameMetrics.tsx": "ae80cbc63d8921c564eb924f5be8d6db391294a0516ad248c5f1fd99dbdf5d13",
+    "DecisionPortfolios.tsx": "d82fdd995fec3c74f4e7ca67836ff392a5c49d2422b779b18f6761d3eb2c9693",
+    "TradeInputs.tsx": "228da4d05a0b2b5ea8942a8a0c2e74156d2565b34e7aed9fe7b95525b17d03b9",
+    "TradePosition.tsx": "b6f3e96e715679d5f45b0ed26c00f80d075fc23285404d6c890a5c7cb3e1c5a0",
+    "trades.ts": "dffba1d146f0028f81aa189a8050265ecc2d879e9557b90deb46b3415a2712ad"
   }
 }

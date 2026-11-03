@@ -1,4 +1,7 @@
+import type { RightsIssue } from "./website/rights-issue";
 import { makeFunctionReference } from "convex/server";
+
+export { companyRoleThresholds } from "./website/company-roles";
 
 export type CompanyRole = "chairman" | "director";
 
@@ -14,7 +17,7 @@ export type Board = {
     reveal?: PublicReveal | null;
     latestPurchase: { title: string; message: string } | null;
     game: { code: string; status: "waiting" | "playing" | "closed" | "special_insights" | "finished";
-        tvControlled?: boolean; currentPeriod: number; periodCount: number; turn: number; currentPlayerId?: string };
+        rightsIssue?: RightsIssue; tvControlled?: boolean; currentPeriod: number; periodCount: number; turn: number; currentPlayerId?: string };
     stocks: { key: number; name: string; imagePath?: string; startingValue: number; value: number; held: number }[];
     players: { id: string; name: string; profileRoot?: string; cash: number; netWorth: number;
         holdings: { stockKey: number; quantity: number }[]; roles?: { stockKey: number; role: CompanyRole }[] }[];
@@ -33,4 +36,8 @@ export const tv = {
 export const rounds = {
     beginSuspensions: makeFunctionReference<"mutation", { code: string; expectedPeriod: number }, null>("rounds:beginSuspensions"),
     skipSuspension: makeFunctionReference<"mutation", { code: string; expectedPeriod: number; insightId: string }, null>("rounds:skipSuspension"),
+};
+
+export const rightsIssue = {
+    skip: makeFunctionReference<"mutation", { code: string; insightId: string; expectedIndex: number }, null>("rightsIssue:skip"),
 };

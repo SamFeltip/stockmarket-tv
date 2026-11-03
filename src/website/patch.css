@@ -151,3 +151,17 @@ main:has(> .game-results) { justify-content: flex-start !important; overflow: vi
 .round-end:not(:has(.round-overview)) { padding-bottom: 5rem !important; }
 .round-end:not(:has(.round-overview)) .round-navigation { position: fixed; bottom: 0; right: 0; padding: 1rem !important; z-index: 10; }
 
+
+.game-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; min-width: 0; width: 100%; max-width: 24rem; }
+.game-metric { display: grid; gap: 0.2rem; min-width: 0; }
+.game-metric-label { color: #c6d7c3; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1; }
+.game-metric-value { display: flex; align-items: baseline; gap: 0.35rem; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.game-metric-value strong { font-size: 1.1rem; font-weight: 600; color: #fff284; }
+.game-metric-value > span { color: #c6d7c3; font-size: 0.7rem; white-space: nowrap; }
+.game-metric progress { appearance: none; width: 100%; height: 5px; margin-top: 0.15rem; border: 0; border-radius: 2px; overflow: hidden; background: #4b6b40; color: #fff284; }
+.game-metric progress::-webkit-progress-bar { background: #4b6b40; }
+.game-metric progress::-webkit-progress-value { background: #fff284; border-radius: 2px; }
+.game-metric progress::-moz-progress-bar { background: #fff284; border-radius: 2px; }
+.turn-goes { display: flex; gap: 3px; height: 5px; margin-top: 0.15rem; }
+.turn-goes > span { flex: 1; background: #4b6b40; border-radius: 2px; }
+.turn-goes > .is-used, .turn-goes > .is-current { background: #fff284; }

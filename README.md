@@ -134,3 +134,8 @@ STOCKMARKET_WEB_SOURCE=../../stockmarket-convex-cash-dock/ node scripts/sync-pre
 
 Deploy the compatible backend before releasing this TV build. This worktree does
 not deploy a backend or install an APK on a TV.
+
+The `poc/share-suspended` branch also presents mid-game Rights Issues from the compatible backend.
+Trading remains paused while shareholders choose; the public display can confirm a skip of the current offer.
+Preview with `?demo=1&view=rights`. The shared trade controls, portfolio table, animation and progress indicators
+are copied by `scripts/sync-presentation.mjs` from the website source, alongside the retail allowance rules.
