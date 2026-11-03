@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 const source = new URL(process.env.STOCKMARKET_WEB_SOURCE || "../../stockmarket-convex/", import.meta.url);
 const target = new URL("../src/website/", import.meta.url);
 await mkdir(target, { recursive: true });
-const files = ["RoundReveal.tsx", "RoundOverview.tsx", "RoundWealth.tsx", "StockPriceChart.tsx", "price-history.ts", "reveals.ts", "round-preview.ts", "FeedMessage.tsx", "GameResults.tsx", "FinalHoldings.tsx", "StockHistoryStrip.tsx", "stock-history.ts", "use-marquee.ts", "MobilePortfolio.tsx", "bootstrap.ts", "use-reveal-ready.ts", "RolePortrait.tsx", "StockRoleFooter.tsx", "CompanyHolding.tsx", "TradeRole.tsx", "CashReveal.tsx", "ShareSuspended.tsx", "SelectionTick.tsx", "RightsIssue.tsx", "GameMetrics.tsx", "DecisionPortfolios.tsx", "TradeInputs.tsx", "TradePosition.tsx", "trades.ts"];
+const files = ["RoundReveal.tsx", "RoundOverview.tsx", "RoundWealth.tsx", "StockPriceChart.tsx", "price-history.ts", "reveals.ts", "round-preview.ts", "FeedMessage.tsx", "GameResults.tsx", "FinalHoldings.tsx", "StockHistoryStrip.tsx", "stock-history.ts", "use-marquee.ts", "MobilePortfolio.tsx", "bootstrap.ts", "use-reveal-ready.ts", "RolePortrait.tsx", "StockRoleFooter.tsx", "CompanyHolding.tsx", "TradeRole.tsx", "CashReveal.tsx", "ShareSuspended.tsx", "SelectionTick.tsx", "RightsIssue.tsx", "GameMetrics.tsx", "DecisionPortfolios.tsx", "TradeStockSummary.tsx", "TradeInputs.tsx", "TradePosition.tsx", "trades.ts"];
 const selected = process.argv.slice(2);
 const hashes = selected.length ? JSON.parse(await readFile(new URL("source.json", target), "utf8")).hashes : {};
 for (const file of files.filter(file => !selected.length || selected.includes(file))) {

@@ -24,11 +24,12 @@
     "CashReveal.tsx": "ae84022e37dd6fe5c0ed11373d566aa5092adb6bd13fc4823d376e5482d49231",
     "ShareSuspended.tsx": "82f9f22a306e9d163e0b0f857648003e7c06030963c5a258efc2b27ca96570ff",
     "SelectionTick.tsx": "48ffe6e69c490d777cce10e31d6f57041da01500a62e62d4c594364ca992d643",
-    "RightsIssue.tsx": "459de9751d634c01446e4de6305662e31911ba802ed5231242a76d7e95153b43",
+    "RightsIssue.tsx": "6954e6b180422e33d1431fe960fbee53051168829b3ed4061b3e2addeaf9952f",
     "GameMetrics.tsx": "ae80cbc63d8921c564eb924f5be8d6db391294a0516ad248c5f1fd99dbdf5d13",
     "DecisionPortfolios.tsx": "d82fdd995fec3c74f4e7ca67836ff392a5c49d2422b779b18f6761d3eb2c9693",
     "TradeInputs.tsx": "228da4d05a0b2b5ea8942a8a0c2e74156d2565b34e7aed9fe7b95525b17d03b9",
     "TradePosition.tsx": "b6f3e96e715679d5f45b0ed26c00f80d075fc23285404d6c890a5c7cb3e1c5a0",
-    "trades.ts": "dffba1d146f0028f81aa189a8050265ecc2d879e9557b90deb46b3415a2712ad"
+    "trades.ts": "dffba1d146f0028f81aa189a8050265ecc2d879e9557b90deb46b3415a2712ad",
+    "TradeStockSummary.tsx": "9aa0feddf5262850d91db87eaf787c0a34dca07ddfa749017171e30cb7ef16fb"
   }
 }
