@@ -1,4 +1,4 @@
-import type { Board } from "./api";
+import type { Board } from "../api";
 const opening = [2, 2.5, 4, 5.5, 7.5, 9];
 const values = [2.25, 2.1, 4.3, 5.8, 7.2, 9.4];
 const names = ["Trusthouse Forte", "UB", "Legal & General", "Thames", "Saatchi & Saatchi", "Natwest"];
@@ -8,7 +8,7 @@ const players = ["Sam", "Alex", "Morgan", "Charlie", "Taylor", "Robin"].map((nam
     return { id: String(index + 1), name, profileRoot: `/static/imgs/${index % 5 + 1}profile.png`, cash, holdings,
         netWorth: cash + holdings.reduce((sum, h, i) => sum + h.quantity * values[i], 0) };
 });
-export const demo: Board = {
+export const boardFixture: Board = {
     latestPurchase: { title: "Sam", message: "bought 5000 shares in Thames" },
     game: { code: "market-night", status: "playing", currentPeriod: 2, periodCount: 5, turn: 5, currentPlayerId: "2" },
     stocks: names.map((name, i) => ({ key: i + 7, name, startingValue: opening[i], value: values[i],

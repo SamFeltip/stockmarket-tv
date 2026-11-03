@@ -17,7 +17,7 @@ export function websiteBoard(board: Board): WebsiteBoard {
 export function newPlayEvents(board: Board, previousId?: string, previousAt = Infinity) {
     const anchor = board.feed.findIndex((item) => item.id === previousId);
     const items = anchor >= 0 ? board.feed.slice(0, anchor) : board.feed.filter((item) => item.at > previousAt);
-    return items.filter((item) => item.colour !== "grey" && (Boolean(item.quantity)
+    return items.filter((item) => item.colour !== "grey" && (Boolean(item.quantity || item.cashBonus)
         || item.message === "passed their go")).reverse();
 }
 

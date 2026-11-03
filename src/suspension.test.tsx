@@ -1,7 +1,7 @@
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { expect, it, vi } from "vitest";
-import { demo } from "./demo";
+import { boardFixture } from "./test-fixtures/board";
 import type { Board } from "./api";
 import { websiteBoard } from "./presentation";
 import { ShareSuspended } from "./website/ShareSuspended";
@@ -10,14 +10,14 @@ import { revealGroups } from "./website/reveals";
 import { pendingSuspensions } from "./website/suspensions";
 import { previewRound } from "./website/round-preview";
 
-const snapshot: Board = { ...demo, game: { ...demo.game, status: "closed", currentPeriod: 1 }, feed: [],
+const snapshot: Board = { ...boardFixture, game: { ...boardFixture.game, status: "closed", currentPeriod: 1 }, feed: [],
     reveal: { period: 1, suspensionPeriod: 1, suspended: [],
-        prices: demo.stocks.map(stock => ({stockKey: stock.key, value: stock.value})),
-        stocks: demo.stocks.map(stock => ({...stock, display: true, variation: stock.key,
+        prices: boardFixture.stocks.map(stock => ({stockKey: stock.key, value: stock.value})),
+        stocks: boardFixture.stocks.map(stock => ({...stock, display: true, variation: stock.key,
             imagePath: "/static/imgs/stocks/thf.png", secondaryImagePath: "/static/imgs/stocks/thf.png"})),
         insights: [
-            {_id:"card-1",playerId:demo.players[1].id,period:1,stockKey:-2,value:0,description:"Share Suspended",chanceKind:"hold",resolved:false},
-            {_id:"card-2",playerId:demo.players[0].id,period:1,stockKey:-2,value:0,description:"Share Suspended",chanceKind:"hold",resolved:false},
+            {_id:"card-1",playerId:boardFixture.players[1].id,period:1,stockKey:-2,value:0,description:"Share Suspended",chanceKind:"hold",resolved:false},
+            {_id:"card-2",playerId:boardFixture.players[0].id,period:1,stockKey:-2,value:0,description:"Share Suspended",chanceKind:"hold",resolved:false},
         ] },
 };
 

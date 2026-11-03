@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Board } from "./api";
-import { demo } from "./demo";
+import { boardFixture } from "./test-fixtures/board";
 import { websiteBoard } from "./presentation";
 import { previewRound } from "./website/round-preview";
 import { RoundOverview } from "./website/RoundOverview";
@@ -9,13 +9,13 @@ import { RoundReveal } from "./website/RoundReveal";
 import { StockRoleFooter } from "./website/StockRoleFooter";
 import { Dashboard } from "./Dashboard";
 
-const snapshot: Board = { ...demo,
-    players: demo.players.map((player, index) => ({ ...player, roles: index === 0
+const snapshot: Board = { ...boardFixture,
+    players: boardFixture.players.map((player, index) => ({ ...player, roles: index === 0
         ? [{ stockKey: 7, role: "chairman" }, { stockKey: 8, role: "director" }]
         : index === 1 ? [{ stockKey: 7, role: "director" }] : [] })),
-    reveal: { period: demo.game.currentPeriod, suspended: [],
-        prices: demo.stocks.map(stock => ({ stockKey: stock.key, value: stock.value })),
-        stocks: demo.stocks.map(stock => ({ ...stock, display: true,
+    reveal: { period: boardFixture.game.currentPeriod, suspended: [],
+        prices: boardFixture.stocks.map(stock => ({ stockKey: stock.key, value: stock.value })),
+        stocks: boardFixture.stocks.map(stock => ({ ...stock, display: true,
             imagePath: `/static/imgs/stocks/${stock.key === 7 ? "thf.png" : "ub.png"}`,
             secondaryImagePath: "/static/imgs/logo.svg" })),
         insights: [

@@ -1,11 +1,11 @@
 import { expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Dashboard } from "./Dashboard";
-import { demo } from "./demo";
+import { boardFixture } from "./test-fixtures/board";
 
 it("orders stock cards and portfolio columns by volatility and keeps holdings aligned", () => {
-    const stocks = [10, 12, 8, 11, 7, 9].map((key) => demo.stocks.find((stock) => stock.key === key)!);
-    const board = { ...demo, stocks, players: [{ ...demo.players[0],
+    const stocks = [10, 12, 8, 11, 7, 9].map((key) => boardFixture.stocks.find((stock) => stock.key === key)!);
+    const board = { ...boardFixture, stocks, players: [{ ...boardFixture.players[0],
         holdings: stocks.map((stock) => ({ stockKey: stock.key, quantity: stock.key })),
     }] };
     const html = renderToStaticMarkup(<Dashboard board={board} phoneUrl="https://example.com"/>);

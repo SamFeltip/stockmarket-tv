@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { CompanyRole } from "./api";
-import { demo } from "./demo";
+import { boardFixture } from "./test-fixtures/board";
 import { Feed } from "./Dashboard";
 import { PlayAnimation } from "./PlayAnimation";
 
@@ -16,9 +16,9 @@ describe("trade role announcements on TV", () => {
         ["director", undefined, ["stepped down as director"]],
     ] as [CompanyRole | undefined, CompanyRole | undefined, string[]][]) {
         it(`renders ${before ?? "no role"} to ${after ?? "no role"} from the recorded event`, () => {
-            const event = { ...demo.feed[0], stockKey: 8, quantity: after === "director" ? -10000 : 50000,
+            const event = { ...boardFixture.feed[0], stockKey: 8, quantity: after === "director" ? -10000 : 50000,
                 roleBefore: before, roleAfter: after };
-            const board = { ...demo, feed: [event] };
+            const board = { ...boardFixture, feed: [event] };
             const popup = renderToStaticMarkup(<PlayAnimation board={board} preview/>);
             const feed = renderToStaticMarkup(<Feed board={board}/>);
             for (const html of [popup, feed]) {

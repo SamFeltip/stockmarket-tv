@@ -101,7 +101,6 @@ h1#stockmarket-header{font-family:"Stockmarket Caslon",serif}
 .tv-results .history-viewport:focus-visible{outline:.15rem solid #fff284;outline-offset:.15rem}
 .tv-results footer{justify-content:center}
 
-.demo-next-period{position:fixed;top:.5rem;right:.5rem;z-index:1100;font-size:.7rem;background:#fff284;color:#111}
 
 /* TV typography scales in rem with the viewport, including portraits and cards. */
 .website-presentation .round-overview { grid-template-rows: auto minmax(min-content, 1fr) auto; gap: .6rem!important; }

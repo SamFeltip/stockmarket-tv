@@ -1,7 +1,5 @@
 import { SpectatorHeader } from "./website/SpectatorHeader";
-import { RightsDemo } from "./RightsDemo";
 import { RightsIssueScreen } from "./RightsIssueScreen";
-import { SuspensionDemo } from "./SuspensionDemo";
 import { Component, useCallback, useState } from "react";
 import type { ReactNode } from "react";
 import { useMutation, useQuery, useConvexConnectionState } from "convex/react";
@@ -12,10 +10,9 @@ import { Dashboard, Feed, JoinCard } from "./Dashboard";
 import { newLobby, readRecent, remember } from "./storage";
 import type { Recent } from "./storage";
 import { useRemote } from "./remote";
-import { demo } from "./demo";
 import { asset, portrait } from "./assets";
 import { PlayAnimation } from "./PlayAnimation";
-import { RoundPresentation, ConnectedRoundPresentation } from "./RoundPresentation";
+import { ConnectedRoundPresentation } from "./RoundPresentation";
 import { resultsBoard } from "./presentation";
 import { GameResults } from "./website/GameResults";
 import privacy from "./privacy.json";
@@ -43,8 +40,8 @@ function CodeKeyboard({ onOpen, onCancel }: { onOpen: (code: string) => void; on
     </section>;
 }
 
-function DashboardScreen({ board, phoneUrl, token, onStart, busy, error, onBack, isDemo = false }: {
-    board: Board; phoneUrl: string; token?: string; onStart: () => void; busy: boolean; error: string; onBack: () => void; isDemo?: boolean; onNext?: () => void;
+function DashboardScreen({ board, phoneUrl, token, onStart, busy, error, onBack }: {
+    board: Board; phoneUrl: string; token?: string; onStart: () => void; busy: boolean; error: string; onBack: () => void; onNext?: () => void;
 }) {
     const { game } = board;
     const waiting = game.status === "waiting";
@@ -74,14 +71,14 @@ function DashboardScreen({ board, phoneUrl, token, onStart, busy, error, onBack,
             </section>
             <div className="lobby-join"><JoinCard code={game.code} phoneUrl={phoneUrl} waiting/>
                 <p>Join on your phone. The first player to join is the host.</p></div>
-            <div className="lobby-footer"><span className="website-title">Stockmarket!</span><span>{isDemo ? "Lobby preview · " : ""}↑ ↓ ← → Navigate · OK Select · Back Home</span></div>
+            <div className="lobby-footer"><span className="website-title">Stockmarket!</span><span>↑ ↓ ← → Navigate · OK Select · Back Home</span></div>
         </div>
     </main>;
     return <div className="game-screen">
         <SpectatorHeader board={resultsBoard(board)} />
         <header className="game-header legacy-spectator-header">
             <div className="card card-green spectator-heading"><img src={asset("/static/imgs/icons/Stock.svg")} alt=""/><div><h2>Spectator view</h2><p>Lobby: {game.code.toUpperCase()}</p></div></div>
-            <div className="card card-green turn-heading"><h3 className="primary">{isDemo ? "Preview · " : ""}{status}</h3><p>Public portfolios and market prices</p></div>
+            <div className="card card-green turn-heading"><h3 className="primary">{status}</h3><p>Public portfolios and market prices</p></div>
             <div className="card card-green title-heading"><h1 id="stockmarket-header">Stockmarket!</h1><p>Period {game.currentPeriod + 1} / {game.periodCount + 1}</p></div>
         </header>
         <div className="game-layout"><Dashboard board={board} phoneUrl={phoneUrl}/><div className="sidebar">
@@ -94,16 +91,14 @@ function DashboardScreen({ board, phoneUrl, token, onStart, busy, error, onBack,
 
 export function GameScreen(props: Parameters<typeof DashboardScreen>[0]) {
     const { board } = props;
-    const view = props.isDemo ? new URLSearchParams(location.search).get("view") : null;
-    const Presentation = props.isDemo ? RoundPresentation : ConnectedRoundPresentation;
     if (board.game.rightsIssue) return <RightsIssueScreen board={board}/>;
     return <>
         {board.game.status === "finished" ? <main className="tv-results"><GameResults board={resultsBoard(board)} onBack={props.onBack}/></main>
-            : board.reveal ? <Presentation key={`${board.game.code}-${board.game.currentPeriod}`} snapshot={board}
+            : board.reveal ? <ConnectedRoundPresentation key={`${board.game.code}-${board.game.currentPeriod}`} snapshot={board}
                 canAdvance={Boolean(props.token)} onNext={props.onNext ?? (() => {})} busy={props.busy} error={props.error}
-                onBack={props.onBack} overview={view === "summary"}/>
+                onBack={props.onBack}/>
                 : <DashboardScreen {...props}/>}
-        <PlayAnimation key={`actions-${board.game.currentPeriod}`} board={board} preview={view === "play"}/>
+        <PlayAnimation key={`actions-${board.game.currentPeriod}`} board={board}/>
     </>;
 
 }
@@ -179,32 +174,9 @@ export function App({ phoneUrl }: { phoneUrl: string }) {
                     {recent.length ? <section className="recents"><h3>Recent games</h3><div>{recent.map((item) => <button className="btn bg-dark" key={item.code} disabled={busy} onClick={() => open(item)}>{item.code.toUpperCase()}</button>)}</div></section> : null}
                     <p className="home-hint">Create a game with your remote, then scan the QR code to join on your phone.</p>
                     <div className="home-information"><p>4–6 players · Phones and internet required · Fictional money</p>
-                        <button className="btn btn-secondary" onClick={() => setMode("privacy")}>Privacy &amp; support</button>
-                        <button className="btn btn-secondary" onClick={() => { location.search = "?demo=1"; }}>Preview game</button></div>
+                        <button className="btn btn-secondary" onClick={() => setMode("privacy")}>Privacy &amp; support</button></div>
                 </>}
             </div><footer><span>Stockmarket! · TV</span><span>↑ ↓ ← → Navigate · OK Select</span></footer>
         </main>}</Boundary>
-    </>;
-}
-
-export function DemoScreen() {
-    const back = useCallback(() => { window.location.search = ""; }, []);
-    useRemote(back, "demo");
-    const preview = new URLSearchParams(location.search).get("view");
-    const [phase, setPhase] = useState(0);
-    if (preview === "rights") return <RightsDemo onBack={back}/>;
-    if (preview === "suspend") return <SuspensionDemo onBack={back}/>;
-    const sample = preview === "finished" ? { ...demo, game: { ...demo.game, status: "finished" as const } } : preview === "lobby" ? { ...demo, game: { ...demo.game, status: "waiting" as const }, players: demo.players.slice(0, 4) }
-        : preview === "reveal" || preview === "summary" || preview === "flow" ? { ...demo, game: { ...demo.game, status: "closed" as const },
-            reveal: { period: demo.game.currentPeriod, prices: demo.stocks.map((stock) => ({ stockKey: stock.key, value: stock.value })), suspended: [],
-                stocks: demo.stocks.map((stock) => ({ key: stock.key, name: stock.name, display: true,
-                    imagePath: `/static/imgs/stocks/${["thf.png", "ub.png", "legal_and_general.svg", "thames.png", "S_and_S.png", "natwest.png"][stock.key - 7]}`,
-                    secondaryImagePath: `/static/imgs/stocks/${["thf.png", "ub.png", "legal_and_general.svg", "thames.png", "S_and_S.png", "natwest.png"][stock.key - 7]}` })),
-                insights: demo.stocks.flatMap((stock, i) => [0, 1].map((n) => ({ _id: `${i}-${n}`, playerId: String(n + 1), stockKey: stock.key,
-                    value: n ? -.25 : .5, description: `${stock.name} Insight ${n ? "-0.25" : "+0.5"}`, resolved: false }))) } } : demo;
-    const shown = phase ? { ...sample, reveal: null, game: { ...sample.game, status: "playing" as const, currentPeriod: demo.game.currentPeriod + phase } } : sample;
-    return <><GameScreen board={shown} phoneUrl="https://stockmarket.samfelton.com" token={["lobby", "reveal", "summary", "flow"].includes(preview ?? "") ? "preview" : undefined}
-        busy={false} error="" onStart={() => {}} onNext={() => setPhase((old) => old + 1)} onBack={back} isDemo/>
-        {preview === "flow" && phase === 0 && <button className="demo-next-period" onClick={() => setPhase(1)}>Preview: start next period</button>}
     </>;
 }

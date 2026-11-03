@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
-import { demo } from "./demo";
+import { boardFixture } from "./test-fixtures/board";
 import { resultsBoard } from "./presentation";
 import { GameScreen } from "./App";
 import { RoundOverview } from "./website/RoundOverview";
@@ -12,22 +12,22 @@ describe("TV game over", () => {
             throw new Error("toSorted is unavailable on this WebView");
         });
         try {
-            const before = resultsBoard(demo);
+            const before = resultsBoard(boardFixture);
             const after = previewRound(before, [], []);
             expect(renderToStaticMarkup(<RoundOverview before={before} after={after}/>)).toContain("Sam");
-            expect(renderToStaticMarkup(<GameScreen board={{ ...demo, game: { ...demo.game, status: "finished" } }}
+            expect(renderToStaticMarkup(<GameScreen board={{ ...boardFixture, game: { ...boardFixture.game, status: "finished" } }}
                 phoneUrl="https://stockmarket.samfelton.com" onStart={()=>{}} onBack={()=>{}} busy={false} error=""/>))
                 .toContain("Sam wins!");
         } finally { unsupported.mockRestore(); }
     });
     it("adapts final public rankings, holdings and prices to the original website components", () => {
-        const board = resultsBoard({ ...demo, game: { ...demo.game, status: "finished" } });
+        const board = resultsBoard({ ...boardFixture, game: { ...boardFixture.game, status: "finished" } });
         expect(board.insights).toEqual([]);
         expect(board.players.find(p=>p.name === "Sam")?.ranking).toBe(1);
         expect(board.game.prices).toHaveLength(6);
     });
     it("renders the web game-over screen rather than retaining insight reveal controls", () => {
-        const html = renderToStaticMarkup(<GameScreen board={{ ...demo, game: { ...demo.game, status: "finished" } }}
+        const html = renderToStaticMarkup(<GameScreen board={{ ...boardFixture, game: { ...boardFixture.game, status: "finished" } }}
             phoneUrl="https://stockmarket.samfelton.com" onStart={()=>{}} onBack={()=>{}} busy={false} error=""/>);
         expect(html).toContain("Sam wins!");
         expect(html).toContain("Final rankings");

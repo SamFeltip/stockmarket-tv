@@ -12,13 +12,11 @@ The TV uses the website's original Bootstrap stylesheet and `styles.css`, Big Ca
 
 The lobby follows the website's centred yellow lobby code, portrait roster, game length, and Back / Launch Game controls, with a phone-joining QR panel. The game view adapts the website's green header cards and white content panels to show all stocks and portfolios simultaneously. Remote focus rings and TV-safe sizing are the main presentation changes.
 
-Use `?demo=1&view=lobby` to preview a populated lobby and `?demo=1` to preview the six-player game. These are labelled previews and do not create games.
-
 ## Display layout and resolution (version 1.2)
 
 The game feed occupies the right sidebar and scrolls using Up/Down when focused; move down past its end to reach Back. The bottom row contains the QR code, combined wealth (winner after completion), and latest purchase. Stock arrows show price movement since the start of the game. The full-screen play animation uses the player's portrait, name, stock logo and action, with the website's 3.5-second fade. New buys, sells and passes are queued chronologically; opening an existing game does not replay its old feed.
 
-When trading closes, the TV uses vendored copies of the website's `RoundReveal`, `RoundOverview`, `RoundWealth`, `StockPriceChart`, `FeedMessage`, and settlement/preview logic. Insights reveal every 2.5 seconds; use the on-screen button with D-pad and Select to skip to the stock result, advance stocks and view the summary. Hold decisions remain on the owner's phone. For TV-created games, the creating TV remote starts the next period or finishes the game after the summary; phone hosts cannot override this. All clients immediately return to play when a new period starts, abandoning unfinished reveal progress. Use `?demo=1&view=play`, `?demo=1&view=reveal` or `?demo=1&view=summary` to preview these views. `node scripts/sync-presentation.mjs` refreshes the copied website components; TV adapters stay separate.
+When trading closes, the TV uses vendored copies of the website's `RoundReveal`, `RoundOverview`, `RoundWealth`, `StockPriceChart`, `FeedMessage`, and settlement/preview logic. Insights reveal every 2.5 seconds; use the on-screen button with D-pad and Select to skip to the stock result, advance stocks and view the summary. Hold decisions remain on the owner's phone. For TV-created games, the creating TV remote starts the next period or finishes the game after the summary; phone hosts cannot override this. All clients immediately return to play when a new period starts, abandoning unfinished reveal progress. `node scripts/sync-presentation.mjs` refreshes the copied website components; TV adapters stay separate.
 
 The layout scales proportionally at 1920×1080 and 3840×2160, with vector charts, QR codes, and text rendering at the WebView’s available pixel density. The same layout also fits the smaller logical viewport used by high-density TV devices. Physical UI output resolution is controlled by the device OS: some 4K TVs render app interfaces at 1080p and upscale them ([Android documentation](https://developer.android.com/reference/android/view/Display.Mode#getPhysicalWidth())). No display-mode or refresh-rate change is forced.
 
@@ -35,7 +33,7 @@ The layout scales proportionally at 1920×1080 and 3840×2160, with vector chart
 
 ## Backend changes
 
-Deploy the accompanying changes in `../stockmarket.js` to the **same** Convex deployment that the phone frontend uses:
+Deploy the accompanying changes in `../stockmarket-convex` to the **same** Convex deployment that the phone frontend uses:
 
 - `convex/tv.ts`: unauthenticated public `board` query, seat-free `create` mutation, and capability-protected lobby `start` mutation.
 - `convex/launch.ts`: shared launch validation/dealing used by both phone and TV.
@@ -67,11 +65,11 @@ VITE_PHONE_URL=https://your-phone-frontend.example.com
 
 The live phone app is `https://stockmarket.samfelton.com` and its client uses `https://effervescent-flamingo-244.convex.cloud`. The example environment contains this exact pair. The TV endpoints and phone sign-in redirect fix were deployed to that existing live configuration on 20 October 2026. Existing phone-created games can be watched by entering their code; no TV-specific game creation is required.
 
-Use the same backend for both apps. The phone URL must point to the **phone frontend**, not the TV app, and must be reachable from phones. The default preview is at port 5174; `?demo=1` shows a clearly labelled offline sample dashboard without creating a game.
+Use the same backend for both apps. The phone URL must point to the **phone frontend**, not the TV app, and must be reachable from phones. The development server runs at port 5174 and connects to the configured backend.
 
-For local LAN testing, run `npm run dev:frontend` in `../stockmarket.js` and set `VITE_PHONE_URL` to this computer's LAN address and port 5173, e.g. `http://192.168.1.238:5173`. Keep both devices on that LAN. A QR containing `localhost` points to the phone itself and will not work on another device. Use HTTPS for a deployed phone frontend.
+For local LAN testing, run `npm run dev:frontend` in `../stockmarket-convex` and set `VITE_PHONE_URL` to this computer's LAN address and port 5173, e.g. `http://192.168.1.238:5173`. Keep both devices on that LAN. A QR containing `localhost` points to the phone itself and will not work on another device. Use HTTPS for a deployed phone frontend.
 
-For a development backend update, run `npx convex dev --once` in `../stockmarket.js`. For production, use that project's documented deployment workflow so the phone frontend and backend update together. This project does not publish either app automatically.
+For a development backend update, run `npx convex dev --once` in `../stockmarket-convex`. For production, use that project's documented deployment workflow so the phone frontend and backend update together. This project does not publish either app automatically.
 
 ## Build and sideload on a TV
 
@@ -99,7 +97,7 @@ Platform references: [Android TV manifest requirements](https://developer.androi
 ```sh
 npm test
 npm run build
-# In ../stockmarket.js:
+# In ../stockmarket-convex:
 npm run check
 ```
 
@@ -112,30 +110,11 @@ Physical TV testing is still needed for manufacturer-specific remote keys, WebVi
 
 AI actions wait 4.3–5.3 seconds, allowing the previous 3.5-second action animation to finish. Both phone and TV clients use the same timing constants; closing insight reveals start after the final action plus a 0.5-second pause. The phone now displays the same public play animation too. During stock reveals each player's net worth includes their holding in the currently visible stock underneath.
 
-TV-created games use the stored TV token for `tv:next`; phone `rounds:next` requests are rejected for those games. The TV remote's summary action changes from Next Period to Finish Game for the final period. All hold-stock decisions must still be resolved on phones. On the next period, all screens immediately return to play. Final games use the original website `GameResults`, `FinalHoldings`, `StockHistoryStrip` and marquee components; the remote selects portfolios and scrolls histories. Preview with `?demo=1&view=finished` or use `?demo=1&view=flow` to test an interrupted reveal.
+TV-created games use the stored TV token for `tv:next`; phone `rounds:next` requests are rejected for those games. The TV remote's summary action changes from Next Period to Finish Game for the final period. All hold-stock decisions must still be resolved on phones. On the next period, all screens immediately return to play. Final games use the original website `GameResults`, `FinalHoldings`, `StockHistoryStrip` and marquee components; the remote selects portfolios and scrolls histories.
 
-## Share Suspended feature branch
 
-`poc/share-suspended` adds the period-end phase after stock and cash reveals.
-The active player's phone chooses; this display shows their portrait, portfolios
-and valuations, with a confirmed skip override. Each decision spends a physical
-card, and the display waits for all decisions before the summary. Remote focus
-stays within the skip-confirmation dialog, and Back cancels the dialog.
+## Chance-card presentation
 
-Use `?demo=1&view=suspend` for a local, disposable preview of sequential skips.
-Refresh to reset. The matching backend and phone implementation is on
-`poc/player-cash-dock` in `stockmarket-convex-cash-dock`.
+The TV presents public Rights Issue progress and the period-end Share Suspended phase from the compatible backend. Shareholders purchase on their phones; public displays can confirm skips. Private hands stay on phones while trading is open.
 
-To refresh the copied presentation from that worktree:
-
-```sh
-STOCKMARKET_WEB_SOURCE=../../stockmarket-convex-cash-dock/ node scripts/sync-presentation.mjs
-```
-
-Deploy the compatible backend before releasing this TV build. This worktree does
-not deploy a backend or install an APK on a TV.
-
-The `poc/share-suspended` branch also presents mid-game Rights Issues from the compatible backend.
-Trading remains paused while shareholders choose; the public display can confirm a skip of the current offer.
-Preview with `?demo=1&view=rights`. The shared trade controls, portfolio table, animation and progress indicators
-are copied by `scripts/sync-presentation.mjs` from the website source, alongside the retail allowance rules.
+Deploy the companion web/backend changes before distributing this TV build. See [merge and release verification](MERGE_READINESS.md). Offline demo routes and sample-game controls are removed.
