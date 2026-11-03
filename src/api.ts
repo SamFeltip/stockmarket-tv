@@ -5,10 +5,10 @@ export type CompanyRole = "chairman" | "director";
 export type PublicReveal = {
     period: number;
     prices: { stockKey: number; value: number }[];
-    suspended: number[];
-    stocks: { key: number; name: string; display: boolean; imagePath: string; secondaryImagePath: string }[];
+    suspended: number[]; suspensionPeriod?: number;
+    stocks: { key: number; name: string; display: boolean; imagePath: string; secondaryImagePath: string; variation?: number }[];
     insights: { _id: string; playerId: string; stockKey: number; value: number; description: string; resolved: boolean;
-        bonusRole?: CompanyRole; removedInsightId?: string }[];
+        chanceKind?: "rights" | "hold" | "loan" | "debenture" | "option"; used?: boolean; period?: number; bonusRole?: CompanyRole; removedInsightId?: string }[];
 };
 export type Board = {
     reveal?: PublicReveal | null;
@@ -20,7 +20,7 @@ export type Board = {
         holdings: { stockKey: number; quantity: number }[]; roles?: { stockKey: number; role: CompanyRole }[] }[];
     history: { period: number; prices: { stockKey: number; value: number }[] }[];
     feed: { id: string; at: number; period: number; title: string; message: string;
-        imageRoot?: string; colour?: string; stockKey?: number; quantity?: number; roleBefore?: CompanyRole; roleAfter?: CompanyRole }[];
+        imageRoot?: string; colour?: string; stockKey?: number; quantity?: number; cashBonus?: number; debenturePayout?: number; roleBefore?: CompanyRole; roleAfter?: CompanyRole }[];
 };
 
 export const tv = {
@@ -28,4 +28,9 @@ export const tv = {
     create: makeFunctionReference<"mutation", { code: string; periodCount: number; token: string }, string>("tv:create"),
     next: makeFunctionReference<"mutation", { code: string; token: string; expectedPeriod: number }, null>("tv:next"),
     start: makeFunctionReference<"mutation", { code: string; token: string }, null>("tv:start"),
+};
+
+export const rounds = {
+    beginSuspensions: makeFunctionReference<"mutation", { code: string; expectedPeriod: number }, null>("rounds:beginSuspensions"),
+    skipSuspension: makeFunctionReference<"mutation", { code: string; expectedPeriod: number; insightId: string }, null>("rounds:skipSuspension"),
 };

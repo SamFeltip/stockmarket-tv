@@ -1,3 +1,4 @@
+import { SuspensionDemo } from "./SuspensionDemo";
 import { Component, useCallback, useState } from "react";
 import type { ReactNode } from "react";
 import { useMutation, useQuery, useConvexConnectionState } from "convex/react";
@@ -11,7 +12,7 @@ import { useRemote } from "./remote";
 import { demo } from "./demo";
 import { asset, portrait } from "./assets";
 import { PlayAnimation } from "./PlayAnimation";
-import { RoundPresentation } from "./RoundPresentation";
+import { RoundPresentation, ConnectedRoundPresentation } from "./RoundPresentation";
 import { resultsBoard } from "./presentation";
 import { GameResults } from "./website/GameResults";
 import privacy from "./privacy.json";
@@ -90,9 +91,10 @@ function DashboardScreen({ board, phoneUrl, token, onStart, busy, error, onBack,
 export function GameScreen(props: Parameters<typeof DashboardScreen>[0]) {
     const { board } = props;
     const view = props.isDemo ? new URLSearchParams(location.search).get("view") : null;
+    const Presentation = props.isDemo ? RoundPresentation : ConnectedRoundPresentation;
     return <>
         {board.game.status === "finished" ? <main className="tv-results"><GameResults board={resultsBoard(board)} onBack={props.onBack}/></main>
-            : board.reveal ? <RoundPresentation key={`${board.game.code}-${board.game.currentPeriod}`} snapshot={board}
+            : board.reveal ? <Presentation key={`${board.game.code}-${board.game.currentPeriod}`} snapshot={board}
                 canAdvance={Boolean(props.token)} onNext={props.onNext ?? (() => {})} busy={props.busy} error={props.error}
                 onBack={props.onBack} overview={view === "summary"}/>
                 : <DashboardScreen {...props}/>}
@@ -185,6 +187,7 @@ export function DemoScreen() {
     useRemote(back, "demo");
     const preview = new URLSearchParams(location.search).get("view");
     const [phase, setPhase] = useState(0);
+    if (preview === "suspend") return <SuspensionDemo onBack={back}/>;
     const sample = preview === "finished" ? { ...demo, game: { ...demo.game, status: "finished" as const } } : preview === "lobby" ? { ...demo, game: { ...demo.game, status: "waiting" as const }, players: demo.players.slice(0, 4) }
         : preview === "reveal" || preview === "summary" || preview === "flow" ? { ...demo, game: { ...demo.game, status: "closed" as const },
             reveal: { period: demo.game.currentPeriod, prices: demo.stocks.map((stock) => ({ stockKey: stock.key, value: stock.value })), suspended: [],

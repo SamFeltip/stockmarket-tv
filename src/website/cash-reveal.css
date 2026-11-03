@@ -1,0 +1,27 @@
+.cash-reveal { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: stretch; gap: 2rem; }
+.cash-reveal-total { background: #3c5f2f; display: flex; align-items: center; justify-content: space-around; gap: 1rem; padding: 2rem; }
+.cash-reveal-identity { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+.cash-reveal-identity img { width: clamp(5rem, 12vw, 10rem); }
+.cash-reveal-total p, .cash-reveal-total h1, .cash-reveal-total h2 { margin: 0; }
+.cash-reveal-total h1 { font-size: clamp(2.5rem, 5vw, 4rem); }
+.cash-reveal-delta { font-size: 1.1rem; font-weight: 600; }
+.cash-reveal-card { height: 100%; min-height: 12rem; border: 1px solid #294023; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; padding: 1.5rem; text-align: center; }
+.cash-reveal-card > img { width: 3rem; height: 2rem; object-fit: contain; filter: brightness(0); }
+.cash-reveal-percent { display: flex; align-items: center; gap: 0.6rem; font-size: 2rem; font-weight: 600; }
+.cash-reveal-card p { margin: 0; font-size: 1.1rem; }
+@media (max-width: 575px) {
+    .cash-reveal { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+    .cash-reveal-total { padding: 1rem; }
+    .cash-reveal-card { min-height: 10rem; padding: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cash-reveal-card { animation: none; }
+}
+
+.cash-reveal-percent span { font-size: inherit; }
+.cash-reveal-delta.text-success { color: #a5ed94 !important; }
+.cash-reveal-delta.text-danger { color: #ffb4b4 !important; }
+.cash-reveal-delta.text-secondary { color: #c1c8be !important; }
+
+.round-player-cash .net-worth-number, .round-player-cash .wealth-delta { font-size: inherit; }

@@ -113,3 +113,24 @@ Physical TV testing is still needed for manufacturer-specific remote keys, WebVi
 AI actions wait 4.3–5.3 seconds, allowing the previous 3.5-second action animation to finish. Both phone and TV clients use the same timing constants; closing insight reveals start after the final action plus a 0.5-second pause. The phone now displays the same public play animation too. During stock reveals each player's net worth includes their holding in the currently visible stock underneath.
 
 TV-created games use the stored TV token for `tv:next`; phone `rounds:next` requests are rejected for those games. The TV remote's summary action changes from Next Period to Finish Game for the final period. All hold-stock decisions must still be resolved on phones. On the next period, all screens immediately return to play. Final games use the original website `GameResults`, `FinalHoldings`, `StockHistoryStrip` and marquee components; the remote selects portfolios and scrolls histories. Preview with `?demo=1&view=finished` or use `?demo=1&view=flow` to test an interrupted reveal.
+
+## Share Suspended feature branch
+
+`poc/share-suspended` adds the period-end phase after stock and cash reveals.
+The active player's phone chooses; this display shows their portrait, portfolios
+and valuations, with a confirmed skip override. Each decision spends a physical
+card, and the display waits for all decisions before the summary. Remote focus
+stays within the skip-confirmation dialog, and Back cancels the dialog.
+
+Use `?demo=1&view=suspend` for a local, disposable preview of sequential skips.
+Refresh to reset. The matching backend and phone implementation is on
+`poc/player-cash-dock` in `stockmarket-convex-cash-dock`.
+
+To refresh the copied presentation from that worktree:
+
+```sh
+STOCKMARKET_WEB_SOURCE=../../stockmarket-convex-cash-dock/ node scripts/sync-presentation.mjs
+```
+
+Deploy the compatible backend before releasing this TV build. This worktree does
+not deploy a backend or install an APK on a TV.

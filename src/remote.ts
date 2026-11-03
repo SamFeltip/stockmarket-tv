@@ -27,17 +27,21 @@ export function useRemote(onBack: () => void, screen: string) {
     useEffect(() => {
         document.documentElement.dataset.tvScreen = screen;
         const selector = "button:not(:disabled), input:not(:disabled), [tabindex='0']";
-        const visible = () => [...document.querySelectorAll<HTMLElement>(selector)]
+        const visible = () => [...(document.querySelector("dialog[open]") ?? document).querySelectorAll<HTMLElement>(selector)]
             .filter((el) => el.getBoundingClientRect().width > 0 && !el.closest("[inert]"));
         const focus = () => {
             if (!visible().includes(document.activeElement as HTMLElement)) visible()[0]?.focus();
         };
         const frame = requestAnimationFrame(focus);
         const observer = new MutationObserver(focus);
-        observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["disabled"] });
+        observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["disabled", "open"] });
         const handler = (event: KeyboardEvent) => {
             if (event.key === "Escape" || event.key === "BrowserBack") {
-                event.preventDefault(); onBack(); return;
+                event.preventDefault();
+                const dialog = document.querySelector<HTMLDialogElement>("dialog[open]");
+                if (dialog) dialog.dispatchEvent(new Event("cancel", { cancelable: true }));
+                else onBack();
+                return;
             }
             if (!event.key.startsWith("Arrow")) return;
             const policy = (document.activeElement as Element | null)?.closest<HTMLElement>(".policy-content");

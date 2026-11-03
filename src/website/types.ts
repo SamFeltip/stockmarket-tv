@@ -4,7 +4,7 @@ export type Stock = PublicReveal["stocks"][number];
 export type Insight = PublicReveal["insights"][number];
 export type Player = Omit<SpectatorBoard["players"][number], "id" | "profileRoot"> & { _id: string; profileRoot: string; ranking?: number };
 export type Board = {
-    game: SpectatorBoard["game"] & { prices: PublicReveal["prices"]; suspended: number[]; priceHistory?: SpectatorBoard["history"] };
+    game: SpectatorBoard["game"] & { prices: PublicReveal["prices"]; suspended: number[]; suspensionPeriod?: number; priceHistory?: SpectatorBoard["history"] };
     stocks: Stock[]; insights: Insight[]; players: Player[];
     feed: SpectatorBoard["feed"];
 };
