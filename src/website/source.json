@@ -3,12 +3,12 @@
   "hashes": {
     "RoundReveal.tsx": "23754b7157fbbf375c1a2a622e4d2ff718abab37cbf2c188f99d3c174c2992cc",
     "RoundOverview.tsx": "07189cbcf0ce95bce70bc2f28428307a50d15e080ddabbefb2a106b4650fb682",
-    "RoundWealth.tsx": "03100b35fcea59c9604df9c78a17b1356bca3c2c3907e0aadac14658d9665b18",
+    "RoundWealth.tsx": "3d86f8240da2d175732410c46978e3aaf819b451ac94096c34b28ea07ca79395",
     "StockPriceChart.tsx": "8119c5df9fd4bd2212aea8c0e5eb8bb654b82e5896eb33125065ec4bc6c9c583",
     "price-history.ts": "6c86cce19dcf2730eed7f1c740973950f97cfc623785e7a896b7c07da3713232",
     "reveals.ts": "f1065d37b02532b1761253af56bbc2923f6158d5002b8fa2ef516d7ecf93a5d5",
     "round-preview.ts": "09ad0bee06b021cb157809de179239914c484e72cb30013d5dea208700f9c429",
-    "FeedMessage.tsx": "c33d687886bdbb17bc717fd95a799c16309e489d5d1d71e17b78840cb978f946",
+    "FeedMessage.tsx": "a96b2aba17b5696081e5cdd9856e685a626563f0e59c29051c28b210249bffd4",
     "GameResults.tsx": "383d95be7f385f05f55c77853cad223b906813469ec3393efb5bb97b65468245",
     "FinalHoldings.tsx": "9918869cbe5841d7d3165d70cb62d3e04c206a60505f4488bbc2285bea5dcd19",
     "StockHistoryStrip.tsx": "b800f6a8c61a82f43afb576f0d50c62e3fa934947f1416356bfef3821de31c39",
@@ -24,12 +24,18 @@
     "CashReveal.tsx": "ae84022e37dd6fe5c0ed11373d566aa5092adb6bd13fc4823d376e5482d49231",
     "ShareSuspended.tsx": "82f9f22a306e9d163e0b0f857648003e7c06030963c5a258efc2b27ca96570ff",
     "SelectionTick.tsx": "48ffe6e69c490d777cce10e31d6f57041da01500a62e62d4c594364ca992d643",
-    "RightsIssue.tsx": "6954e6b180422e33d1431fe960fbee53051168829b3ed4061b3e2addeaf9952f",
+    "RightsIssue.tsx": "0d9db4098de6aa03879cce775f204e4d858a5eeb1c7dbc64822dfe8986898056",
     "GameMetrics.tsx": "ae80cbc63d8921c564eb924f5be8d6db391294a0516ad248c5f1fd99dbdf5d13",
-    "DecisionPortfolios.tsx": "d82fdd995fec3c74f4e7ca67836ff392a5c49d2422b779b18f6761d3eb2c9693",
+    "DecisionPortfolios.tsx": "3aa4c643066fe19775c36f63563bff28d0d9e22de96966c62a66ce5fd26e9889",
     "TradeInputs.tsx": "228da4d05a0b2b5ea8942a8a0c2e74156d2565b34e7aed9fe7b95525b17d03b9",
     "TradePosition.tsx": "b6f3e96e715679d5f45b0ed26c00f80d075fc23285404d6c890a5c7cb3e1c5a0",
     "trades.ts": "dffba1d146f0028f81aa189a8050265ecc2d879e9557b90deb46b3415a2712ad",
-    "TradeStockSummary.tsx": "9aa0feddf5262850d91db87eaf787c0a34dca07ddfa749017171e30cb7ef16fb"
+    "TradeStockSummary.tsx": "9aa0feddf5262850d91db87eaf787c0a34dca07ddfa749017171e30cb7ef16fb",
+    "PortfolioTable.tsx": "256d68bb5e283fe27857ae12e1c1a10a1490efe866f8708af7be428de574e525",
+    "SpectatorHeader.tsx": "2dec1e67bd4759d922257e74d70662937a95ecd9d220e04e9513d6b39e6818b9",
+    "RightsIssueSpectatorDesktop.tsx": "b38d804e691de19f2d62b779389fa66525f9a2da77c39edceacdca58f4a6856b",
+    "RightsIssueSkip.tsx": "4a58ee937d80342d920682204b69dea79de39d9764face1f7ff63f71349338c1",
+    "SpectatorDashboard.tsx": "d790560f6a371c4a092a7b3f3b81dccf1979d1a156c80836fb0bef6016a7aabf",
+    "spectator-board.ts": "0bff730d2466bd0bf199319ffa1601a96435506f3f652aca2d94007109f4eff3"
   }
 }

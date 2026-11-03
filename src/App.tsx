@@ -1,3 +1,4 @@
+import { SpectatorHeader } from "./website/SpectatorHeader";
 import { RightsDemo } from "./RightsDemo";
 import { RightsIssueScreen } from "./RightsIssueScreen";
 import { SuspensionDemo } from "./SuspensionDemo";
@@ -77,7 +78,8 @@ function DashboardScreen({ board, phoneUrl, token, onStart, busy, error, onBack,
         </div>
     </main>;
     return <div className="game-screen">
-        <header className="game-header">
+        <SpectatorHeader board={resultsBoard(board)} />
+        <header className="game-header legacy-spectator-header">
             <div className="card card-green spectator-heading"><img src={asset("/static/imgs/icons/Stock.svg")} alt=""/><div><h2>Spectator view</h2><p>Lobby: {game.code.toUpperCase()}</p></div></div>
             <div className="card card-green turn-heading"><h3 className="primary">{isDemo ? "Preview · " : ""}{status}</h3><p>Public portfolios and market prices</p></div>
             <div className="card card-green title-heading"><h1 id="stockmarket-header">Stockmarket!</h1><p>Period {game.currentPeriod + 1} / {game.periodCount + 1}</p></div>
