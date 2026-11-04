@@ -7,13 +7,13 @@ import "../public/static/stylesheets/closed.css";
 import "./website/patch.css";
 import "./style.css";
 const root = createRoot(document.getElementById("root")!);
-const convexUrl = import.meta.env.VITE_CONVEX_URL;
-const phoneUrl = import.meta.env.VITE_PHONE_URL;
-function configurationValid() {
+const convexUrl: unknown = import.meta.env.VITE_CONVEX_URL;
+const phoneUrl: unknown = import.meta.env.VITE_PHONE_URL;
+function configurationValid(convexUrl: string, phoneUrl: string) {
     try { joinUrl(phoneUrl, "test"); return /^https:\/\/[a-z0-9-]+(?:\.[a-z0-9-]+)?\.convex\.cloud$/.test(convexUrl); }
     catch { return false; }
 }
-if (configurationValid()) {
+if (typeof convexUrl === "string" && typeof phoneUrl === "string" && configurationValid(convexUrl, phoneUrl)) {
     const client = new ConvexReactClient(convexUrl);
     root.render(<StrictMode><ConvexProvider client={client}><Boundary onBack={() => location.reload()}><App phoneUrl={phoneUrl}/></Boundary></ConvexProvider></StrictMode>);
 } else {

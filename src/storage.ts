@@ -1,11 +1,15 @@
 export type Recent = { code: string; token?: string };
 const key = "stockmarket-tv:v1";
+function isRecent(item: unknown): item is Recent {
+    if (typeof item !== "object" || item === null || !("code" in item)) return false;
+    const token = "token" in item ? item.token : undefined;
+    return typeof item.code === "string" && /^[a-z0-9_-]{1,32}$/.test(item.code)
+        && (token === undefined || (typeof token === "string" && /^[a-f0-9]{64}$/.test(token)));
+}
 export function readRecent(): Recent[] {
     try {
         const data: unknown = JSON.parse(localStorage.getItem(key) ?? "[]");
-        return Array.isArray(data) ? data.filter((item): item is Recent => typeof item?.code === "string"
-            && /^[a-z0-9_-]{1,32}$/.test(item.code)
-            && (item.token === undefined || /^[a-f0-9]{64}$/.test(item.token))).slice(0, 12) : [];
+        return Array.isArray(data) ? data.filter(isRecent).slice(0, 12) : [];
     } catch { return []; }
 }
 export function remember(entry: Recent) {

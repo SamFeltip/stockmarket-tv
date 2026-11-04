@@ -44,7 +44,7 @@ export function useRemote(onBack: () => void, screen: string) {
                 return;
             }
             if (!event.key.startsWith("Arrow")) return;
-            const policy = (document.activeElement as Element | null)?.closest<HTMLElement>(".policy-content");
+            const policy = document.activeElement?.closest<HTMLElement>(".policy-content");
             if (policy && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
                 const down = event.key === "ArrowDown";
                 if (down ? policy.scrollTop + policy.clientHeight < policy.scrollHeight - 1 : policy.scrollTop > 0) {
@@ -53,7 +53,7 @@ export function useRemote(onBack: () => void, screen: string) {
                     return;
                 }
             }
-            const history = (document.activeElement as Element | null)?.closest<HTMLElement>(".history-viewport");
+            const history = document.activeElement?.closest<HTMLElement>(".history-viewport");
             if (history && (event.key === "ArrowLeft" || event.key === "ArrowRight")) {
                 event.preventDefault();
                 history.scrollBy({ left: history.clientWidth * (event.key === "ArrowRight" ? .4 : -.4) });
