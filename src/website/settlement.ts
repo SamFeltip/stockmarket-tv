@@ -29,13 +29,15 @@ export function roundCash(player: { _id: string; cash: number }, insights: Insig
         .reduce((sum, insight) => sum + insight.value, 0);
 
     // New board-game cash cards affect everyone, just like company-price cards.
-    // Round the adjustment, not the player's existing balance, to the nearest £1,000.
+    // Round the adjustment, not the player's existing balance, to the nearest £500.
     const cashPercent = Math.round(insights.filter((insight) => insight.stockKey === cashStockKey)
         .reduce((sum, insight) => sum + insight.value, 0) * 100);
-    const adjustment = Math.sign(cashPercent) * Math.round(player.cash * Math.abs(cashPercent) / 100 / 1000) * 1000;
+    const adjustment = Math.sign(cashPercent) * Math.round(player.cash * Math.abs(cashPercent) / 100 / 500) * 500;
 
-    // Preserve the old per-player semantics for explicitly imported legacy currency cards.
-    return Math.max(0, Math.trunc(player.cash * (1 + change)) + adjustment);
+    // Imported legacy currency cards still affect only their owner, using the same £500 rounding.
+    const legacyAdjustment = Math.sign(change) * Math.round(player.cash * Math.abs(change) / 500) * 500;
+
+    return Math.max(0, player.cash + legacyAdjustment + adjustment);
 }
 
 export function portfolioWorth(player: { cash: number; holdings: { stockKey: number; quantity: number }[] },
