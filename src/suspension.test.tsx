@@ -26,6 +26,9 @@ it("shows the current actor, portfolios and a spectator override on the TV after
     const board = websiteBoard(snapshot);
     expect(revealGroups(board.stocks, board.insights).at(-1)?.key).toBe(-1);
     expect(pendingSuspensions(1,board.players,board.insights).map(card=>card._id)).toEqual(["card-1","card-2"]);
+    expect(pendingSuspensions(1,board.players,[])).toEqual([]);
+    expect(pendingSuspensions(1,[],board.insights)).toEqual([]);
+    expect(pendingSuspensions(1,board.players.slice(2),board.insights)).toEqual([]);
     const html = renderToStaticMarkup(<ConvexProvider client={client}><RoundPresentation snapshot={snapshot}
         canAdvance onNext={()=>undefined} onBack={()=>undefined} busy={false} error=""/></ConvexProvider>);
     expect(html).toContain("Alex is deciding which stock valuation to suspend");
