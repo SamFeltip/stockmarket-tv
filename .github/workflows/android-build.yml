@@ -44,3 +44,18 @@ jobs:
           print(f'Verified {len(files)} web assets inside {apk}')
           print('APK SHA-256:', hashlib.sha256(apk.read_bytes()).hexdigest())
           PY
+      - name: Prepare downloadable debug APK
+        run: |
+          mkdir -p prepared
+          cp android/app/build/outputs/apk/debug/app-debug.apk prepared/stockmarket-tv-debug.apk
+          cd prepared
+          sha256sum stockmarket-tv-debug.apk > SHA256SUMS
+          printf 'Stockmarket TV debug build\nCommit: %s\nProduction backend: https://effervescent-flamingo-244.convex.cloud\nPhone: https://stockmarket.samfelton.com\nDebug-signed with a CI test key; not a store release.\n' "$GITHUB_SHA" > BUILD.txt
+      - name: Upload prepared TV build
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: stockmarket-tv-debug-${{ github.sha }}
+          path: prepared/
+          retention-days: 1
+          compression-level: 0
+          if-no-files-found: error
