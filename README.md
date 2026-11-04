@@ -47,29 +47,9 @@ Creation retries with the same code and token are idempotent. Clearing TV app da
 
 ## Browser development
 
-Node 22.18+:
+Follow the parent workspace's [TV setup instructions](https://github.com/SamFeltip/stockmarket-game-engine/blob/main/SETUP.md#tv-browser-development) for installation, environment variables and LAN testing. The development server uses port 5174. TV and phone must connect to the same Convex backend; the QR destination must be the phone frontend and reachable from the phone.
 
-```sh
-npm ci
-cp .env.example .env.local
-# Edit both URLs before continuing.
-npm run dev
-```
-
-Set:
-
-```dotenv
-VITE_CONVEX_URL=https://your-deployment.convex.cloud
-VITE_PHONE_URL=https://your-phone-frontend.example.com
-```
-
-The live phone app is `https://stockmarket.samfelton.com` and its client uses `https://effervescent-flamingo-244.convex.cloud`. The example environment contains this exact pair. The TV endpoints and phone sign-in redirect fix were deployed to that existing live configuration on 20 October 2026. Existing phone-created games can be watched by entering their code; no TV-specific game creation is required.
-
-Use the same backend for both apps. The phone URL must point to the **phone frontend**, not the TV app, and must be reachable from phones. The development server runs at port 5174 and connects to the configured backend.
-
-For local LAN testing, run `npm run dev:frontend` in `../stockmarket-convex` and set `VITE_PHONE_URL` to this computer's LAN address and port 5173, e.g. `http://192.168.1.238:5173`. Keep both devices on that LAN. A QR containing `localhost` points to the phone itself and will not work on another device. Use HTTPS for a deployed phone frontend.
-
-For a development backend update, run `npx convex dev --once` in `../stockmarket-convex`. For production, use that project's documented deployment workflow so the phone frontend and backend update together. This project does not publish either app automatically.
+For coordinated backend/frontend releases, use the [deployment guide](https://github.com/SamFeltip/stockmarket-game-engine/blob/main/DEPLOYMENT.md). This app does not deploy either service automatically.
 
 ## Build and sideload on a TV
 
@@ -117,4 +97,4 @@ TV-created games use the stored TV token for `tv:next`; phone `rounds:next` requ
 
 The TV presents public Rights Issue progress and the period-end Share Suspended phase from the compatible backend. Shareholders purchase on their phones; public displays can confirm skips. Private hands stay on phones while trading is open.
 
-Deploy the companion web/backend changes before distributing this TV build. See [merge and release verification](MERGE_READINESS.md). Offline demo routes and sample-game controls are removed.
+Deploy the companion web/backend changes before distributing this TV build. See [merge and release verification](https://github.com/SamFeltip/stockmarket-game-engine/blob/main/RELEASE_VERIFICATION.md). Offline demo routes and sample-game controls are removed.
