@@ -6,6 +6,9 @@ The interface is bundled into a small Android WebView application, served from a
 
 For signed Google Play and Amazon Appstore releases, store materials and submission status, see [PUBLISHING.md](PUBLISHING.md). Development APKs below are for private sideloading.
 
+
+See [ENVIRONMENT.md](ENVIRONMENT.md) for repository-local env files, variable ownership and configuration instructions.
+
 ## Website theme (version 1.1)
 
 The TV uses the website's original Bootstrap stylesheet and `styles.css`, Big Caslon title font, Inter body font, company logos, movement icons, player portraits, and app icon. These assets are vendored under `public/static/`, so the app remains standalone and loads its visuals from the APK. `npm run theme:sync` refreshes the original assets from the sibling website project; preserve the separately bundled Inter regular font and OFL license.
