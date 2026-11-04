@@ -2,6 +2,14 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
 const source = new URL(process.env.STOCKMARKET_WEB_SOURCE || "../../stockmarket-convex/", import.meta.url);
 const target = new URL("../src/website/", import.meta.url);
+// Rule modules in the web app may forward to the parent workspace's shared engine.
+// Vendor their implementation, preserving this standalone TV project's existing build layout.
+async function readSharedRule(file) {
+    const location = new URL(`shared/${file}`, source);
+    const contents = await readFile(location, "utf8");
+    const forwarded = contents.match(/export \* from "([^"]+)";/);
+    return forwarded ? readFile(new URL(`${forwarded[1]}.ts`, location), "utf8") : contents;
+}
 await mkdir(target, { recursive: true });
 const files = ["RoundReveal.tsx", "RoundOverview.tsx", "RoundWealth.tsx", "StockPriceChart.tsx", "price-history.ts", "reveals.ts", "round-preview.ts", "FeedMessage.tsx", "GameResults.tsx", "FinalHoldings.tsx", "StockHistoryStrip.tsx", "stock-history.ts", "use-marquee.ts", "MobilePortfolio.tsx", "bootstrap.ts", "use-reveal-ready.ts", "RolePortrait.tsx", "StockRoleFooter.tsx", "CompanyHolding.tsx", "TradeRole.tsx", "CashReveal.tsx", "ShareSuspended.tsx", "SelectionTick.tsx", "RightsIssue.tsx", "GameMetrics.tsx", "SpectatorHeader.tsx", "RightsIssueSpectatorDesktop.tsx", "RightsIssueSkip.tsx", "SpectatorDashboard.tsx", "spectator-board.ts", "DecisionPortfolios.tsx", "PortfolioTable.tsx", "TradeStockSummary.tsx", "TradeInputs.tsx", "TradePosition.tsx", "trades.ts"];
 const selected = process.argv.slice(2);
@@ -12,12 +20,12 @@ for (const file of files.filter(file => !selected.length || selected.includes(fi
     await writeFile(new URL(file, target), prefix + original.replaceAll('id: item._id, at: item._creationTime', 'id: item.id, at: item.at').replaceAll('item={{ ...item, _id: item.id, _creationTime: item.at }}', 'item={item}').replaceAll('"./spectator/types"', '"../api"').replaceAll('"./spectator/assets"', '"../assets"').replaceAll('"./spectator/spectator.css"', '"./spectator.css"').replaceAll('"./spectator/tv-display.css"', '"./tv-display.css"').replaceAll('"../shared/settlement"' , '"./settlement"').replaceAll('"../shared/chance-cards"', '"./chance-cards"').replaceAll('"../shared/rights-issue"', '"./rights-issue"').replaceAll('"../shared/rules"', '"./rules"').replaceAll('"../shared/presentation"', '"./timing"').replaceAll('"react-router-dom"', '"./navigation"').replaceAll('(min-width: 992px)', '(min-width: 0px)').replaceAll('.toSorted(', '.slice().sort(').replaceAll('"./display-types"', '"./types"').replaceAll('"../shared/company-roles"', '"../api"'));
     hashes[file] = createHash("sha256").update(original).digest("hex");
 }
-await writeFile(new URL("settlement.ts", target), await readFile(new URL("shared/settlement.ts", source)));
-await writeFile(new URL("chance-cards.ts", target), await readFile(new URL("shared/chance-cards.ts", source)));
-await writeFile(new URL("suspensions.ts", target), (await readFile(new URL("shared/suspensions.ts", source), "utf8")).replaceAll('.toSorted(', '.slice().sort('));
-await writeFile(new URL("rights-issue.ts", target), await readFile(new URL("shared/rights-issue.ts", source)));
-await writeFile(new URL("company-roles.ts", target), (await readFile(new URL("shared/company-roles.ts", source), "utf8")).replaceAll('.toSorted(', '.slice().sort('));
-await writeFile(new URL("rules.ts", target), await readFile(new URL("shared/rules.ts", source)));
+await writeFile(new URL("settlement.ts", target), await readSharedRule("settlement.ts"));
+await writeFile(new URL("chance-cards.ts", target), await readSharedRule("chance-cards.ts"));
+await writeFile(new URL("suspensions.ts", target), (await readSharedRule("suspensions.ts")).replaceAll('.toSorted(', '.slice().sort('));
+await writeFile(new URL("rights-issue.ts", target), await readSharedRule("rights-issue.ts"));
+await writeFile(new URL("company-roles.ts", target), (await readSharedRule("company-roles.ts")).replaceAll('.toSorted(', '.slice().sort('));
+await writeFile(new URL("rules.ts", target), await readSharedRule("rules.ts"));
 for (const style of ["rights-issue.css", "trade-inputs.css", "portfolio-table.css", "spectator-header.css", "rights-spectator-desktop.css"]) {
     await writeFile(new URL(style, target), await readFile(new URL(`src/${style}`, source)));
 }
@@ -25,7 +33,7 @@ await writeFile(new URL("share-suspended.css", target), await readFile(new URL("
 const cashStyles = await readFile(new URL("src/patch.css", source), "utf8");
 const cashStart = cashStyles.indexOf(".cash-reveal {");
 await writeFile(new URL("cash-reveal.css", target), cashStart < 0 ? "" : cashStyles.slice(cashStart));
-await writeFile(new URL("timing.ts", target), await readFile(new URL("shared/presentation.ts", source)));
+await writeFile(new URL("timing.ts", target), await readSharedRule("presentation.ts"));
 await writeFile(new URL("company-roles.css", target), await readFile(new URL("src/company-roles.css", source)));
 const patch = await readFile(new URL("src/patch.css", source), "utf8");
 await writeFile(new URL("patch.css", target), patch.slice(patch.indexOf("#play-notif {"), patch.indexOf("/* On narrow panels")) + "\n" + patch.slice(patch.indexOf(".game-metrics {"), patch.indexOf(".game-title-button {")));
