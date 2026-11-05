@@ -48,7 +48,7 @@ export function RoundPresentation({ snapshot, canAdvance = true, onNext, busy, e
       && board.stocks.find((item) => item.key === insight.stockKey)?.name === "Hold Stock Price");
     const { preview, wealth } = roundProgress(board, reviewed ? groups.length : step, index);
 
-    const afterCash = suspensions.length > 0 ? "Next: Share Suspended" : "View round summary";
+    const afterCash = suspensions.length > 0 ? "Next: Share Suspended" : "Show round summary";
     const continuation = step < groups.length - 1 ? `Next: ${groups[step + 1].name}` : afterCash;
 
     useEffect(() =>

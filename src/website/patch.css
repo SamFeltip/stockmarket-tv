@@ -151,6 +151,26 @@ main:has(> .game-results) { justify-content: flex-start !important; overflow: vi
 .round-end:not(:has(.round-overview)) { padding-bottom: 5rem !important; }
 .round-end:not(:has(.round-overview)) .round-navigation { position: fixed; bottom: 0; right: 0; padding: 1rem !important; z-index: 10; }
 
+.round-overview-stocks article > img { align-self: center; max-width: 100%; flex-shrink: 0; }
+.round-overview-stocks .stock-result { width: 100%; }
+.round-overview-stocks .stock-result > * { min-width: 0; }
+.round-overview-players article { min-width: 0; }
+@media (max-width: 991.98px) {
+    .round-overview .stock-result {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        grid-template-areas: "was change now" "before change after";
+        gap: 0.25rem;
+        align-items: center;
+    }
+    .round-overview .stock-result > p:first-child { grid-area: was; }
+    .round-overview .stock-result > h2:nth-child(2) { grid-area: before; }
+    .round-overview .stock-result-change { grid-area: change; font-size: 1.1rem; margin: 0; }
+    .round-overview .stock-result > p:nth-child(4) { grid-area: now; }
+    .round-overview .stock-result > h2:last-child { grid-area: after; }
+    .round-overview .stock-result h2 { font-size: clamp(1.1rem, 5vw, 1.75rem); margin: 0; }
+}
+
 
 .game-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; min-width: 0; width: 100%; max-width: 24rem; }
 .game-metric { display: grid; gap: 0.2rem; min-width: 0; }

@@ -1,3 +1,4 @@
+import { priceSeries } from "./website/price-history";
 import { RolePortrait } from "./website/RolePortrait";
 import { TradeRoleLabel } from "./website/TradeRole";
 import { CompanyHolding } from "./website/CompanyHolding";
@@ -14,11 +15,12 @@ const count = (n: number) => new Intl.NumberFormat("en-GB", { notation: "compact
 const volatilityOrder = [7, 8, 9, 10, 11, 12];
 
 function PriceLine({ board, stockKey }: { board: Board; stockKey: number }) {
-    const values = board.history.map((entry) => entry.prices.find((p) => p.stockKey === stockKey)?.value)
-        .filter((v): v is number => v !== undefined);
+    const history = priceSeries({ ...board.game, prices: [], priceHistory: board.history }, stockKey)
+        .filter((point) => point.value !== null);
+    const values = history.map((point) => point.value ?? 0);
     if (values.length < 2) return <span className="muted">History appears after each period</span>;
     const min = Math.min(...values), max = Math.max(...values);
-    const points = values.map((v, i) => `${2 + i / (values.length - 1) * 176},${38 - (v - min) / (max - min || 1) * 32}`).join(" ");
+    const points = history.map((point) => `${2 + point.round / (board.game.periodCount + 1) * 176},${38 - ((point.value ?? 0) - min) / (max - min || 1) * 32}`).join(" ");
     return <svg className="sparkline" viewBox="0 0 180 44" role="img" aria-label={`Recorded prices: ${values.map((v) => `£${v.toFixed(2)}`).join(", ")}`}>
         <path d="M0 40H180" stroke="#adb5aa"/><polyline points={points} stroke="#204712" fill="none" strokeWidth="2.5"/>
     </svg>;

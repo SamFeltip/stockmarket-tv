@@ -21,7 +21,8 @@ export type Board = {
     stocks: { key: number; name: string; imagePath?: string; startingValue: number; value: number; held: number }[];
     players: { id: string; name: string; profileRoot?: string; cash: number; netWorth: number;
         holdings: { stockKey: number; quantity: number }[]; roles?: { stockKey: number; role: CompanyRole }[] }[];
-    history: { period: number; prices: { stockKey: number; value: number }[] }[];
+    history: { period: number; prices: { stockKey: number; value: number }[];
+        steps?: { stockKey: number; values: number[]; count: number }[] }[];
     feed: { id: string; at: number; period: number; title: string; message: string;
         imageRoot?: string; colour?: string; stockKey?: number; quantity?: number; cashBonus?: number; debenturePayout?: number; roleBefore?: CompanyRole; roleAfter?: CompanyRole }[];
 };
