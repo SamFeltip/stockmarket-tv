@@ -15,11 +15,13 @@ export function PlayAnimation({ board, preview = false }: { board: Board; previe
             queue: [...state.queue, ...newPlayEvents(board, state.id, state.at)] });
     }
     const active = state.queue[0];
+    const activeId = active?.id;
     useEffect(() => {
-        if (!active) return;
-        const timer = window.setTimeout(() => setState((old) => ({ ...old, queue: old.queue.slice(1) })), actionAnimationMs);
+        if (!activeId) return;
+        const timer = window.setTimeout(() => setState((old) => old.queue[0]?.id === activeId
+            ? { ...old, queue: old.queue.slice(1) } : old), actionAnimationMs);
         return () => window.clearTimeout(timer);
-    }, [active]);
+    }, [activeId]);
     if (!active) return null;
     const player = board.players.find((candidate) => candidate.name === active.title);
     return <div key={active.id} id="play-notif" className="play-notification d-flex justify-content-center align-items-center" role="status" aria-live="polite">
@@ -29,5 +31,8 @@ export function PlayAnimation({ board, preview = false }: { board: Board; previe
             <FeedMessage item={active} stocks={board.stocks.map((stock) => ({ ...stock, display: true,
                 imagePath: stockLogo(stock.key, stock.imagePath), secondaryImagePath: stockLogo(stock.key, stock.imagePath) }))} detailed/>
         </div>
+        <button type="button" className="play-notification-dismiss" aria-label="Dismiss play notification"
+            onClick={() => setState((old) => old.queue[0]?.id === activeId
+                ? { ...old, queue: old.queue.slice(1) } : old)}/>
     </div>;
 }

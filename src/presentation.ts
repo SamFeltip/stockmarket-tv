@@ -9,6 +9,7 @@ export function websiteBoard(board: Board): WebsiteBoard {
         game: { ...board.game, prices: reveal.prices, suspended: reveal.suspended, suspensionPeriod: reveal.suspensionPeriod, priceHistory: board.history },
         stocks: reveal.stocks.map((stock) => ({ ...stock, imagePath: asset(stock.imagePath), secondaryImagePath: asset(stock.secondaryImagePath) })),
         insights: reveal.insights,
+        trades: reveal.trades?.map((trade) => ({ ...trade, imageRoot: portrait(trade.imageRoot) })),
         players: board.players.map(({ id, profileRoot, ...player }) => ({ ...player, _id: id, profileRoot: portrait(profileRoot) })),
         feed: board.feed,
     };

@@ -59,6 +59,8 @@ h1#stockmarket-header{font-family:"Stockmarket Caslon",serif}
 .website-presentation .round-overview-players h3,.website-presentation .round-overview-players h4{font-size:1rem}
 .website-presentation .round-overview-players p{font-size:.8rem}
 .play-notification{position:fixed;inset:0;z-index:1090;background:rgba(15,44,18,.96);color:white;pointer-events:none;animation:fadeout 2.5s ease-in-out 1s forwards}
+.play-notification-dismiss { position: absolute; inset: 0; width: 100%; border: 0; background: transparent; pointer-events: auto; cursor: pointer; }
+.play-notification-dismiss:focus-visible { outline: 2px solid white; outline-offset: -4px; }
 #play-notif>div>img{width:15rem;height:15rem}#play-notif h1{font-size:3rem}
 #play-notif .trade-message{display:flex;align-items:center;justify-content:center;gap:1rem;font-size:2rem}
 #play-notif .trade-message img{width:3rem;height:3rem;object-fit:contain}

@@ -1,3 +1,4 @@
+import type { ChartTrade } from "./website/price-history";
 import type { RightsIssue } from "./website/rights-issue";
 import { makeFunctionReference } from "convex/server";
 
@@ -7,6 +8,7 @@ export type CompanyRole = "chairman" | "director";
 
 export type PublicReveal = {
     period: number;
+    trades?: ChartTrade[];
     prices: { stockKey: number; value: number }[];
     suspended: number[]; suspensionPeriod?: number;
     stocks: { key: number; name: string; display: boolean; imagePath: string; secondaryImagePath: string; variation?: number }[];
