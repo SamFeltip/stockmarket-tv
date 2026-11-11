@@ -64,7 +64,6 @@ export function Dashboard({ board, phoneUrl }: { board: Board; phoneUrl: string 
     const stocks = board.game.pack && board.game.pack !== "classic" ? board.stocks : [...board.stocks].sort((a, b) =>
         (volatilityOrder.indexOf(a.key) + 1 || Infinity) - (volatilityOrder.indexOf(b.key) + 1 || Infinity));
     const ranked = [...board.players].sort((a, b) => b.netWorth - a.netWorth);
-    const latest = board.latestPurchase;
     const finished = board.game.status === "finished";
     return <div className="dashboard">
         <section className="market-section">
@@ -91,7 +90,6 @@ export function Dashboard({ board, phoneUrl }: { board: Board; phoneUrl: string 
         <section className="bottom-row">
             <JoinCard code={board.game.code} phoneUrl={phoneUrl} compact/>
             {finished && <article className="stat card"><h3>Winner</h3><strong>{ranked[0]?.name ?? "—"}</strong><p>{money(ranked[0]?.netWorth ?? 0)}</p></article>}
-            <article className="latest card"><h3>Latest purchase</h3><strong>{latest ? latest.title : "No purchases yet"}</strong><p>{latest ? latest.message : "Purchases appear here as they happen."}</p></article>
             {!finished && <PlayStyleCard pack={board.game.pack}/>}
         </section>
     </div>;
