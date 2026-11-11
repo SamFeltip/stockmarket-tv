@@ -1,3 +1,4 @@
+import { nextRoundLabel } from "./website/packs";
 import { useMutation } from "convex/react";
 import { pendingSuspensions } from "./website/suspensions";
 import { ShareSuspended } from "./website/ShareSuspended";
@@ -172,7 +173,7 @@ export function RoundPresentation({ snapshot, canAdvance = true, onNext, busy, e
                             {pendingHolds && <p>Waiting for players to resolve their hold-stock insights.</p>}
                             {canAdvance ? (
                             <button className="btn btn-primary" disabled={busy || pendingHolds || !canAdvance} onClick={onNext}>
-                                {busy ? "Starting…" : (board.game.currentPeriod >= board.game.periodCount ? "Finish Game" : "Next Period")}
+                                {busy ? "Starting…" : nextRoundLabel(board.game)}
                                 {" "}
                                 →
                             </button>

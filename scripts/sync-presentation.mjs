@@ -11,7 +11,7 @@ async function readSharedRule(file) {
     return forwarded ? readFile(new URL(`${forwarded[1]}.ts`, location), "utf8") : contents;
 }
 await mkdir(target, { recursive: true });
-const files = ["RoundReveal.tsx", "RoundOverview.tsx", "RoundWealth.tsx", "StockPriceChart.tsx", "price-history.ts", "reveals.ts", "round-preview.ts", "FeedMessage.tsx", "GameResults.tsx", "FinalHoldings.tsx", "StockHistoryStrip.tsx", "stock-history.ts", "use-marquee.ts", "MobilePortfolio.tsx", "bootstrap.ts", "use-reveal-ready.ts", "RolePortrait.tsx", "StockRoleFooter.tsx", "CompanyHolding.tsx", "TradeRole.tsx", "CashReveal.tsx", "ShareSuspended.tsx", "SelectionTick.tsx", "RightsIssue.tsx", "GameMetrics.tsx", "SpectatorHeader.tsx", "RightsIssueSpectatorDesktop.tsx", "RightsIssueSkip.tsx", "SpectatorDashboard.tsx", "spectator-board.ts", "DecisionPortfolios.tsx", "PortfolioTable.tsx", "TradeStockSummary.tsx", "TradeInputs.tsx", "TradePosition.tsx", "trades.ts", "PackControl.tsx"];
+const files = ["RoundReveal.tsx", "RoundOverview.tsx", "RoundWealth.tsx", "StockPriceChart.tsx", "price-history.ts", "reveals.ts", "round-preview.ts", "FeedMessage.tsx", "GameResults.tsx", "FinalHoldings.tsx", "StockHistoryStrip.tsx", "stock-history.ts", "use-marquee.ts", "MobilePortfolio.tsx", "bootstrap.ts", "use-reveal-ready.ts", "RolePortrait.tsx", "StockRoleFooter.tsx", "CompanyHolding.tsx", "TradeRole.tsx", "CashReveal.tsx", "ShareSuspended.tsx", "SelectionTick.tsx", "RightsIssue.tsx", "GameMetrics.tsx", "SpectatorHeader.tsx", "RightsIssueSpectatorDesktop.tsx", "RightsIssueSkip.tsx", "SpectatorDashboard.tsx", "spectator-board.ts", "DecisionPortfolios.tsx", "PortfolioTable.tsx", "TradeStockSummary.tsx", "TradeInputs.tsx", "TradePosition.tsx", "trades.ts", "PackControl.tsx", "GameLengthControl.tsx"];
 const selected = process.argv.slice(2);
 const hashes = selected.length ? JSON.parse(await readFile(new URL("source.json", target), "utf8")).hashes : {};
 for (const file of files.filter(file => !selected.length || selected.includes(file))) {
@@ -27,7 +27,7 @@ await writeFile(new URL("rights-issue.ts", target), await readSharedRule("rights
 await writeFile(new URL("company-roles.ts", target), (await readSharedRule("company-roles.ts")).replaceAll('.toSorted(', '.slice().sort('));
 await writeFile(new URL("rules.ts", target), await readSharedRule("rules.ts"));
 await writeFile(new URL("packs.ts", target), await readSharedRule("packs.ts"));
-for (const style of ["rights-issue.css", "trade-inputs.css", "portfolio-table.css", "spectator-header.css", "rights-spectator-desktop.css", "pack-control.css"]) {
+for (const style of ["rights-issue.css", "trade-inputs.css", "portfolio-table.css", "spectator-header.css", "rights-spectator-desktop.css", "pack-control.css", "game-length.css"]) {
     await writeFile(new URL(style, target), await readFile(new URL(`src/${style}`, source)));
 }
 await writeFile(new URL("share-suspended.css", target), await readFile(new URL("src/share-suspended.css", source)));
