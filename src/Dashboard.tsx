@@ -61,7 +61,6 @@ export function Dashboard({ board, phoneUrl }: { board: Board; phoneUrl: string 
     const stocks = [...board.stocks].sort((a, b) =>
         (volatilityOrder.indexOf(a.key) + 1 || Infinity) - (volatilityOrder.indexOf(b.key) + 1 || Infinity));
     const ranked = [...board.players].sort((a, b) => b.netWorth - a.netWorth);
-    const latest = board.latestPurchase;
     const total = board.players.reduce((sum, player) => sum + player.netWorth, 0);
     const invested = board.players.reduce((sum, player) => sum + player.netWorth - player.cash, 0);
     const finished = board.game.status === "finished";
@@ -90,7 +89,6 @@ export function Dashboard({ board, phoneUrl }: { board: Board; phoneUrl: string 
         <section className="bottom-row">
             <JoinCard code={board.game.code} phoneUrl={phoneUrl} compact/>
             <article className="stat card"><h3>{finished ? "Winner" : "Combined wealth"}</h3><strong>{finished ? ranked[0]?.name ?? "—" : money(total)}</strong><p>{finished ? money(ranked[0]?.netWorth ?? 0) : `${money(invested)} in shares`}</p></article>
-            <article className="latest card"><h3>Latest purchase</h3><strong>{latest ? latest.title : "No purchases yet"}</strong><p>{latest ? latest.message : "Purchases appear here as they happen."}</p></article>
         </section>
     </div>;
 }

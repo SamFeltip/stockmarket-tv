@@ -32,6 +32,7 @@ export type Board = {
 export const tv = {
     board: makeFunctionReference<"query", { code: string }, Board | null>("tv:board"),
     create: makeFunctionReference<"mutation", { code: string; periodCount: number; token: string }, string>("tv:create"),
+    setLength: makeFunctionReference<"mutation", { code: string; token: string; periodCount: number }, null>("tv:setLength"),
     next: makeFunctionReference<"mutation", { code: string; token: string; expectedPeriod: number }, null>("tv:next"),
     start: makeFunctionReference<"mutation", { code: string; token: string }, null>("tv:start"),
 };
