@@ -186,7 +186,7 @@ export function App({ phoneUrl }: { phoneUrl: string }) {
                     <button className="btn btn-secondary" onClick={back}>Back</button>
                 </> : mode === "watch" ? <CodeKeyboard onCancel={back} onOpen={(code) => open(recent.find((item) => item.code === code) ?? { code })}/> : <>
                     <div className="home-content card-body">
-                        <section className="home-controls bg-dark rounded"><h2>Create a game</h2><PackControl pack={pack} busy={busy} onChange={setPack}/>
+                        <section className="home-controls bg-dark rounded"><PackControl pack={pack} busy={busy} onChange={setPack}/>
                             <button className="btn btn-primary create" disabled={busy || !connection.isWebSocketConnected} onClick={() => void createGame()}><img src={asset("/static/imgs/icons/Handshake.svg")} alt=""/>{busy ? "Creating game…" : "Create game"}</button>
                             {error ? <p className="error" role="alert">{error}</p> : null}
                         </section>
