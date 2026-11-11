@@ -98,7 +98,7 @@ export function GameScreen(props: Parameters<typeof DashboardScreen>[0]) {
                 canAdvance={Boolean(props.token)} onNext={props.onNext ?? (() => {})} busy={props.busy} error={props.error}
                 onBack={props.onBack}/>
                 : <DashboardScreen {...props}/>}
-        <PlayAnimation key={`actions-${board.game.currentPeriod}`} board={board}/>
+        <PlayAnimation key={`actions-${board.game.code}`} board={board}/>
     </>;
 
 }

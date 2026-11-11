@@ -4,8 +4,8 @@
     "RoundReveal.tsx": "e00910df94a107a7cad704b52be58e3f89f3d81378b07f265eb3307436358c13",
     "RoundOverview.tsx": "57d1ba7989f24e51f7f8530e2cd0269b0cb5d9b3afbb382a73e3b67a12ccea7e",
     "RoundWealth.tsx": "3d86f8240da2d175732410c46978e3aaf819b451ac94096c34b28ea07ca79395",
-    "StockPriceChart.tsx": "2ea35ed1d28b79075d14279360435499879bc2112949005d9333531fa1dd7fa3",
-    "price-history.ts": "567cb51d871eb7cd4764dd5c2cb45369054d92d1ad625b0ea0db7c2e59ca8c76",
+    "StockPriceChart.tsx": "f49183aad29329091f37b994c5ebc10e6b84afce8d5e2fa885ae48217276f40c",
+    "price-history.ts": "59961c10a3a809d3077ac6b077dc2444478c33782e639a594432aa8531c9f1fb",
     "reveals.ts": "5d10db8a7897e1f1edc257af04f46380c58841fdd12045c3d9493f2016d70e27",
     "round-preview.ts": "4e186610f596819a1fca74c076c1d85599e031e88364d406038c15d544919dd1",
     "FeedMessage.tsx": "a96b2aba17b5696081e5cdd9856e685a626563f0e59c29051c28b210249bffd4",
@@ -36,6 +36,7 @@
     "TradeStockSummary.tsx": "9aa0feddf5262850d91db87eaf787c0a34dca07ddfa749017171e30cb7ef16fb",
     "TradeInputs.tsx": "5940aa0f7f6b1ded3cb8612c5df5810941e02b5691dd6a8cab315b5de1afec81",
     "TradePosition.tsx": "dccc1fb6149bb20ab4866d1b38c6bb4841ff7b819f6796b3afe93db16b2bbce4",
-    "trades.ts": "dffba1d146f0028f81aa189a8050265ecc2d879e9557b90deb46b3415a2712ad"
+    "trades.ts": "dffba1d146f0028f81aa189a8050265ecc2d879e9557b90deb46b3415a2712ad",
+    "TradeMarkers.tsx": "43ac51f9adb05ca731080da7775991959aba0e95fc4d76acc9be2b0365497066"
   }
 }
