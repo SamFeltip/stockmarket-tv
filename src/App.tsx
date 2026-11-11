@@ -1,6 +1,7 @@
 import { PackControl } from "./website/PackControl";
 import { packLengths, packPeriods, techDefaultPeriods, type Pack } from "./website/packs";
-import { GameMetrics } from "./website/GameMetrics";
+import { SpectatorHeader } from "./website/SpectatorHeader";
+import "./website/spectator.css";
 import { RightsIssueScreen } from "./RightsIssueScreen";
 import { Component, useCallback, useState } from "react";
 import type { ReactNode } from "react";
@@ -97,28 +98,13 @@ function DashboardScreen({ board, phoneUrl, token, onStart, onSetLength, onPack,
             <div className="lobby-footer"><span className="website-title">Stockmarket!</span><span>↑ ↓ ← → Navigate · OK Select · Back Home</span></div>
         </div>
     </main>;
-    const current = game.status === "playing" ? board.players.find((player) => player.id === game.currentPlayerId) : undefined;
-    return <div className="game-screen">
-        <header className="game-header tv-game-header" aria-label="Spectator game header">
-            <div className="card card-green current-player" role="status">
-                {current && <img src={portrait(current.profileRoot)} alt=""/>}
-                <div>
-                    <p>Current player</p>
-                    <strong>{current?.name ?? "—"}</strong>
-                </div>
-            </div>
-            <div className="card card-green turn-heading">
-                <GameMetrics board={resultsBoard(board)}/>
-            </div>
-            <div className="card card-green title-heading">
-                <h1 id="stockmarket-header">Stockmarket!</h1>
-            </div>
-        </header>
+    return <div className="web-spectator tv-spectator"><main className="game-screen">
+        <SpectatorHeader board={resultsBoard(board)}/>
         <div className="game-layout"><Dashboard board={board} phoneUrl={phoneUrl}/><div className="sidebar">
             <Feed board={board}/>
             {error ? <p className="error" role="alert">{error}</p> : null}<button className="btn btn-secondary" onClick={onBack}>Back</button>
         </div></div><footer><span>Stockmarket! · Spectator view</span><span>↑ ↓ ← → Navigate · OK Select · Back Home</span></footer>
-    </div>;
+    </main></div>;
 }
 
 export function GameScreen(props: Parameters<typeof DashboardScreen>[0]) {

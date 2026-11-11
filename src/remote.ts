@@ -59,6 +59,16 @@ export function useRemote(onBack: () => void, screen: string) {
                 history.scrollBy({ left: history.clientWidth * (event.key === "ArrowRight" ? .4 : -.4) });
                 return;
             }
+            const feed = document.activeElement?.closest<HTMLElement>(".feed-entries");
+            if (feed && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
+                const down = event.key === "ArrowDown";
+                const canScroll = down ? feed.scrollTop + feed.clientHeight < feed.scrollHeight - 1 : feed.scrollTop > 0;
+                if (canScroll) {
+                    event.preventDefault();
+                    feed.scrollBy({ top: (down ? 1 : -1) * feed.clientHeight * 0.6 });
+                    return;
+                }
+            }
             // Text fields accept normal typing; D-pad can still leave them in any direction.
             const elements = visible();
             const current = elements.indexOf(document.activeElement as HTMLElement);
