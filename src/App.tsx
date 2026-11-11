@@ -1,5 +1,5 @@
 import { PackControl } from "./website/PackControl";
-import { packLengths, packPeriods, techDefaultPeriods, type Pack } from "./website/packs";
+import { packDefaultPeriods, packLengths, packPeriods, type Pack } from "./website/packs";
 import { SpectatorHeader } from "./website/SpectatorHeader";
 import "./website/spectator.css";
 import { RightsIssueScreen } from "./RightsIssueScreen";
@@ -18,7 +18,6 @@ import { PlayAnimation } from "./PlayAnimation";
 import { ConnectedRoundPresentation } from "./RoundPresentation";
 import { resultsBoard } from "./presentation";
 import { GameResults } from "./website/GameResults";
-import { gameLengths } from "./website/rules";
 import privacy from "./privacy.json";
 
 export function errorMessage(error: unknown) {
@@ -166,7 +165,7 @@ export function App({ phoneUrl }: { phoneUrl: string }) {
         try {
             // Persist the capability before the request, so a lost response can be retried safely.
             setRecent(remember(draft));
-            const code = await create({ ...draft, periodCount: (pack === "tech" ? techDefaultPeriods : gameLengths[0]) - 1, pack });
+            const code = await create({ ...draft, periodCount: packDefaultPeriods(pack) - 1, pack });
             open({ ...draft, code });
             setDraft(newLobby());
         } catch (err) { setError(errorMessage(err)); }

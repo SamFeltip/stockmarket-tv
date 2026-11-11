@@ -25,11 +25,11 @@
     "ShareSuspended.tsx": "82f9f22a306e9d163e0b0f857648003e7c06030963c5a258efc2b27ca96570ff",
     "SelectionTick.tsx": "48ffe6e69c490d777cce10e31d6f57041da01500a62e62d4c594364ca992d643",
     "RightsIssue.tsx": "89d5003805aabbb758058661fcb1a759e46fda456199ecf63758edcd8a26676f",
-    "GameMetrics.tsx": "07a8ed8e45028420f9d27da493fd99982e42b971233e91e639c946f4bfa056c2",
+    "GameMetrics.tsx": "6706f6bbbe9c2c2e53acd066eda99430e3b32f86d0809e8d27cf9e9dfc28fe15",
     "SpectatorHeader.tsx": "8f6f949965a3eef0995f139e8aa426e43fe5b551ad32d2e22bcc8e3c2615042c",
     "RightsIssueSpectatorDesktop.tsx": "cad0c2e742801348daba1c50879e6dbd2c4d06e322beeb1b56d26303a239ba90",
     "RightsIssueSkip.tsx": "4a58ee937d80342d920682204b69dea79de39d9764face1f7ff63f71349338c1",
-    "SpectatorDashboard.tsx": "90501d90117e81428f2401bc61717c4902f9f926b9d8d8fd29d90454977c4ef3",
+    "SpectatorDashboard.tsx": "091527a05fdd7e909d2b498d875fe84e97b2efe1a36defeb01c531dd320219cc",
     "spectator-board.ts": "ae277c8d30a43643158f5b28e3c8b6e3531ddae62631f8013c7c9963f477b932",
     "DecisionPortfolios.tsx": "3aa4c643066fe19775c36f63563bff28d0d9e22de96966c62a66ce5fd26e9889",
     "PortfolioTable.tsx": "256d68bb5e283fe27857ae12e1c1a10a1490efe866f8708af7be428de574e525",
@@ -37,11 +37,12 @@
     "TradeInputs.tsx": "5940aa0f7f6b1ded3cb8612c5df5810941e02b5691dd6a8cab315b5de1afec81",
     "TradePosition.tsx": "dccc1fb6149bb20ab4866d1b38c6bb4841ff7b819f6796b3afe93db16b2bbce4",
     "trades.ts": "dffba1d146f0028f81aa189a8050265ecc2d879e9557b90deb46b3415a2712ad",
-    "PackControl.tsx": "3f16aeb366c7dc9c83287b52af0539693b4ff3b95bf8f66b36e293896b83b39a",
+    "PackControl.tsx": "2b7776e62215fd14a9a7640abaabf0f1d3e3d7502c747fe2febec1be97b8c512",
     "GameLengthControl.tsx": "48a23abcae54735695645d9eff5f37e93f0f10c48c418894e76e75b38d0018a1",
     "TradeMarkers.tsx": "cc7e8a9ebc32b82248435103b98f791fc5c94c16515a2e50a275557965f39e48",
-    "PackIcon.tsx": "7ab30fbaaa371348aee0d10f933b6c9b9c8ffdf4cbb660a56405beb268aaff77",
+    "PackIcon.tsx": "f43f1e7cc0d4f61c70841c9e196b150bee1d4d1fb7461e2ffd1a7174b3f32b35",
     "Marquee.tsx": "9c662f236efe50cd7f621bfa69c4322af024ecf6aa841a6ea47333e1fc265a33",
-    "StockHistoryChart.tsx": "87d4158df3b45672bcb764ebc5830933ff9ad2fce026132f7470e9135f905875"
+    "StockHistoryChart.tsx": "87d4158df3b45672bcb764ebc5830933ff9ad2fce026132f7470e9135f905875",
+    "pack-presentation.ts": "58e7434f6d2dc4ba6edc8f81d827a18fbe0774a8120b132f000e165af850f5c7"
   }
 }

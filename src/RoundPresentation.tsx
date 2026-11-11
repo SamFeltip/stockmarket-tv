@@ -1,4 +1,4 @@
-import { nextRoundLabel } from "./website/packs";
+import { nextRoundLabel } from "./website/pack-presentation";
 import { useMutation } from "convex/react";
 import { pendingSuspensions } from "./website/suspensions";
 import { ShareSuspended } from "./website/ShareSuspended";
