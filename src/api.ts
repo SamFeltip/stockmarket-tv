@@ -1,4 +1,5 @@
 import type { ChartTrade } from "./website/price-history";
+import type { Pack } from "./website/packs";
 import type { RightsIssue } from "./website/rights-issue";
 import { makeFunctionReference } from "convex/server";
 
@@ -19,8 +20,9 @@ export type Board = {
     reveal?: PublicReveal | null;
     latestPurchase: { title: string; message: string } | null;
     game: { code: string; status: "waiting" | "playing" | "closed" | "special_insights" | "finished";
+        pack?: Pack; tradingDates?: { from: string; to: string };
         rightsIssue?: RightsIssue; tvControlled?: boolean; currentPeriod: number; periodCount: number; turn: number; currentPlayerId?: string };
-    stocks: { key: number; name: string; imagePath?: string; startingValue: number; value: number; held: number }[];
+    stocks: { key: number; name: string; imagePath?: string; secondaryImagePath?: string; startingValue: number; value: number; held: number }[];
     players: { id: string; name: string; profileRoot?: string; cash: number; netWorth: number;
         holdings: { stockKey: number; quantity: number }[]; roles?: { stockKey: number; role: CompanyRole }[] }[];
     history: { period: number; prices: { stockKey: number; value: number }[];
@@ -31,7 +33,8 @@ export type Board = {
 
 export const tv = {
     board: makeFunctionReference<"query", { code: string }, Board | null>("tv:board"),
-    create: makeFunctionReference<"mutation", { code: string; periodCount: number; token: string }, string>("tv:create"),
+    create: makeFunctionReference<"mutation", { code: string; periodCount: number; token: string; pack?: Pack }, string>("tv:create"),
+    setPack: makeFunctionReference<"mutation", { code: string; token: string; pack: Pack }, null>("tv:setPack"),
     next: makeFunctionReference<"mutation", { code: string; token: string; expectedPeriod: number }, null>("tv:next"),
     start: makeFunctionReference<"mutation", { code: string; token: string }, null>("tv:start"),
 };

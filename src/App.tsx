@@ -1,3 +1,5 @@
+import { PackControl } from "./website/PackControl";
+import { packRounds, type Pack } from "./website/packs";
 import { SpectatorHeader } from "./website/SpectatorHeader";
 import { RightsIssueScreen } from "./RightsIssueScreen";
 import { Component, useCallback, useState } from "react";
@@ -40,8 +42,8 @@ function CodeKeyboard({ onOpen, onCancel }: { onOpen: (code: string) => void; on
     </section>;
 }
 
-function DashboardScreen({ board, phoneUrl, token, onStart, busy, error, onBack }: {
-    board: Board; phoneUrl: string; token?: string; onStart: () => void; busy: boolean; error: string; onBack: () => void; onNext?: () => void;
+function DashboardScreen({ board, phoneUrl, token, onStart, onPack, busy, error, onBack }: {
+    board: Board; phoneUrl: string; token?: string; onStart: () => void; busy: boolean; error: string; onBack: () => void; onNext?: () => void; onPack?: (pack: Pack) => void;
 }) {
     const { game } = board;
     const waiting = game.status === "waiting";
@@ -63,6 +65,7 @@ function DashboardScreen({ board, phoneUrl, token, onStart, busy, error, onBack 
                         <img src={asset("/static/imgs/icons/Handshake.svg")} alt=""/><p>Scan to join the game</p>
                     </div> : null}
                 </div>
+                <PackControl pack={game.pack} busy={busy} onChange={token ? onPack : undefined}/>
                 <div className="game-length"><p>Game length</p><span className="length-value bg-dark rounded">{game.periodCount + 1} periods</span></div>
                 {error ? <p className="error" role="alert">{error}</p> : null}
                 <div className="lobby-actions"><button className="btn btn-secondary" onClick={onBack}>Back</button>
@@ -106,6 +109,7 @@ export function GameScreen(props: Parameters<typeof DashboardScreen>[0]) {
 function LiveBoard({ entry, phoneUrl, onBack }: { entry: Recent; phoneUrl: string; onBack: () => void }) {
     const board = useQuery(tv.board, { code: entry.code });
     const start = useMutation(tv.start);
+    const setPack = useMutation(tv.setPack);
     const next = useMutation(tv.next);
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState("");
@@ -115,6 +119,11 @@ function LiveBoard({ entry, phoneUrl, onBack }: { entry: Recent; phoneUrl: strin
         if (!entry.token) return;
         setBusy(true); setError("");
         void next({ code: entry.code, token: entry.token, expectedPeriod: board.game.currentPeriod })
+            .catch((err: unknown) => setError(errorMessage(err))).finally(() => setBusy(false));
+    }} onPack={(pack) => {
+        if (!entry.token) return;
+        setBusy(true); setError("");
+        void setPack({ code: entry.code, token: entry.token, pack })
             .catch((err: unknown) => setError(errorMessage(err))).finally(() => setBusy(false));
     }} onStart={() => {
         if (!entry.token) return;
@@ -128,6 +137,7 @@ export function App({ phoneUrl }: { phoneUrl: string }) {
     const [recent, setRecent] = useState(readRecent);
     const [mode, setMode] = useState("home");
     const [periods, setPeriods] = useState(6);
+    const [pack, setPack] = useState<Pack>("classic");
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState("");
     const [draft, setDraft] = useState(newLobby);
@@ -144,7 +154,7 @@ export function App({ phoneUrl }: { phoneUrl: string }) {
         try {
             // Persist the capability before the request, so a lost response can be retried safely.
             setRecent(remember(draft));
-            const code = await create({ ...draft, periodCount: periods - 1 });
+            const code = await create({ ...draft, periodCount: periods - 1, pack });
             open({ ...draft, code });
             setDraft(newLobby());
         } catch (err) { setError(errorMessage(err)); }
@@ -164,8 +174,9 @@ export function App({ phoneUrl }: { phoneUrl: string }) {
                     <button className="btn btn-secondary" onClick={back}>Back</button>
                 </> : mode === "watch" ? <CodeKeyboard onCancel={back} onOpen={(code) => open(recent.find((item) => item.code === code) ?? { code })}/> : <>
                     <div className="home-content card-body">
-                        <section className="home-controls bg-dark rounded"><h2>Create a game</h2><p>Game length</p>
-                            <div className="lengths" role="group" aria-label="Number of periods">{[6, 7, 8, 9, 10].map((n) => <button key={n} className="btn" aria-pressed={periods === n} onClick={() => setPeriods(n)} disabled={busy}>{n}</button>)}</div>
+                        <section className="home-controls bg-dark rounded"><h2>Create a game</h2><PackControl pack={pack} busy={busy} onChange={setPack}/><p>Game length</p>
+                            {pack === "tech" ? <span>{packRounds(pack, periods)} periods</span>
+                                : <div className="lengths" role="group" aria-label="Number of periods">{[6, 7, 8, 9, 10].map((n) => <button key={n} className="btn" aria-pressed={periods === n} onClick={() => setPeriods(n)} disabled={busy}>{n}</button>)}</div>}
                             <button className="btn btn-primary create" disabled={busy || !connection.isWebSocketConnected} onClick={() => void createGame()}><img src={asset("/static/imgs/icons/Handshake.svg")} alt=""/>{busy ? "Creating game…" : "Create game"}</button>
                             {error ? <p className="error" role="alert">{error}</p> : null}
                         </section>

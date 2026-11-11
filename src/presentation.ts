@@ -28,7 +28,7 @@ export function resultsBoard(board: Board): WebsiteBoard {
         game: { ...board.game, prices: board.stocks.map((stock) => ({ stockKey: stock.key, value: stock.value })),
             suspended: [], priceHistory: board.history },
         stocks: board.stocks.map((stock) => ({ key: stock.key, name: stock.name, startingValue: stock.startingValue, display: true,
-            imagePath: stockLogo(stock.key, stock.imagePath), secondaryImagePath: stockLogo(stock.key, stock.imagePath) })),
+            imagePath: stockLogo(stock.key, stock.imagePath), secondaryImagePath: stockLogo(stock.key, stock.secondaryImagePath ?? stock.imagePath) })),
         insights: [], players: board.players.map(({ id, profileRoot, ...player }) => ({ ...player,
             _id: id, profileRoot: portrait(profileRoot), ranking: ranked.findIndex((item) => item.id === id) + 1 })),
         feed: board.feed,

@@ -10,8 +10,11 @@ const root = createRoot(document.getElementById("root")!);
 const convexUrl: unknown = import.meta.env.VITE_CONVEX_URL;
 const phoneUrl: unknown = import.meta.env.VITE_PHONE_URL;
 function configurationValid(convexUrl: string, phoneUrl: string) {
-    try { joinUrl(phoneUrl, "test"); return /^https:\/\/[a-z0-9-]+(?:\.[a-z0-9-]+)?\.convex\.cloud$/.test(convexUrl); }
-    catch { return false; }
+    try {
+        joinUrl(phoneUrl, "test");
+        if (import.meta.env.DEV && /^http:\/\/(127\.0\.0\.1|localhost):\d+$/.test(convexUrl)) return true;
+        return /^https:\/\/[a-z0-9-]+(?:\.[a-z0-9-]+)?\.convex\.cloud$/.test(convexUrl);
+    } catch { return false; }
 }
 if (typeof convexUrl === "string" && typeof phoneUrl === "string" && configurationValid(convexUrl, phoneUrl)) {
     const client = new ConvexReactClient(convexUrl);
