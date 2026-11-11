@@ -4,8 +4,8 @@
     "RoundReveal.tsx": "e00910df94a107a7cad704b52be58e3f89f3d81378b07f265eb3307436358c13",
     "RoundOverview.tsx": "57d1ba7989f24e51f7f8530e2cd0269b0cb5d9b3afbb382a73e3b67a12ccea7e",
     "RoundWealth.tsx": "3d86f8240da2d175732410c46978e3aaf819b451ac94096c34b28ea07ca79395",
-    "StockPriceChart.tsx": "c6dbf48a43b411ac4040d5198bab31b9ba4d9c68b584095c48b449e5ecefc763",
-    "price-history.ts": "881a23d6d9174af23e924bb6c4736aa91cea428bf087862d8f087c8dafe8e242",
+    "StockPriceChart.tsx": "a16f75283c2239c9731f5a1a03045f1302d1bcc5bf5664783e20a6fdf0dcaa1d",
+    "price-history.ts": "765962b8fe3eb391f40b06d3418866320b81099fb1e106abe23804159f3cd76f",
     "reveals.ts": "5d10db8a7897e1f1edc257af04f46380c58841fdd12045c3d9493f2016d70e27",
     "round-preview.ts": "4e186610f596819a1fca74c076c1d85599e031e88364d406038c15d544919dd1",
     "FeedMessage.tsx": "a96b2aba17b5696081e5cdd9856e685a626563f0e59c29051c28b210249bffd4",
@@ -24,7 +24,7 @@
     "CashReveal.tsx": "ae84022e37dd6fe5c0ed11373d566aa5092adb6bd13fc4823d376e5482d49231",
     "ShareSuspended.tsx": "82f9f22a306e9d163e0b0f857648003e7c06030963c5a258efc2b27ca96570ff",
     "SelectionTick.tsx": "48ffe6e69c490d777cce10e31d6f57041da01500a62e62d4c594364ca992d643",
-    "RightsIssue.tsx": "bedf488b8892455ac9d077e60b1822fbf71559acc0d6e61b45500efe281b8e2a",
+    "RightsIssue.tsx": "89d5003805aabbb758058661fcb1a759e46fda456199ecf63758edcd8a26676f",
     "GameMetrics.tsx": "6b6ce78842c96954e03f71e9ea16e77b04d22aa95dd9bea779b2512827d1dbcf",
     "SpectatorHeader.tsx": "5859197a5e7a28d88a4e7686a4a752fda171777b7e369a07f6ea70f3e77cfee7",
     "RightsIssueSpectatorDesktop.tsx": "b38d804e691de19f2d62b779389fa66525f9a2da77c39edceacdca58f4a6856b",
@@ -38,6 +38,7 @@
     "TradePosition.tsx": "dccc1fb6149bb20ab4866d1b38c6bb4841ff7b819f6796b3afe93db16b2bbce4",
     "trades.ts": "dffba1d146f0028f81aa189a8050265ecc2d879e9557b90deb46b3415a2712ad",
     "PackControl.tsx": "cd3eecd6f9c5b500ba41190f33407cdb90227b17d3fb27888e23c90c7a3cc453",
-    "GameLengthControl.tsx": "48a23abcae54735695645d9eff5f37e93f0f10c48c418894e76e75b38d0018a1"
+    "GameLengthControl.tsx": "48a23abcae54735695645d9eff5f37e93f0f10c48c418894e76e75b38d0018a1",
+    "TradeMarkers.tsx": "cc7e8a9ebc32b82248435103b98f791fc5c94c16515a2e50a275557965f39e48"
   }
 }
