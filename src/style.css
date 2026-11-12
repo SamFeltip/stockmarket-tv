@@ -84,6 +84,13 @@ h1#stockmarket-header{font-family:"Stockmarket Caslon",serif}
 .tv-results .results-leaderboard { padding: .35rem; overflow-y: auto; }
 .tv-results .result-player-button:focus { border-color: #fff284!important; }
 .portfolios { overflow: auto; }
+.tv-spectator .dashboard { gap: .6rem; }
+.tv-spectator .stock { padding-block: .35rem; }
+.tv-spectator .stock-title { height: 2.6rem; gap: .2rem; }
+.tv-spectator .price-row { margin-block: .15rem; }
+/* The final caption repeats holdings from the table. Keep the suspended price above the chart. */
+.tv-spectator .stock > .stock-footer:last-child { display: none; }
+.tv-spectator .portfolios { padding-block: .65rem; }
 /* Give animated portfolio changes their own line above the current value. */
 @keyframes tv-wealth-change { 0% { opacity: 0; } 20%, 65% { opacity: 1; } 100% { opacity: 0; } }
 
