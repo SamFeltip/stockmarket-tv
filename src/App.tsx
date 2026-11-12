@@ -1,5 +1,7 @@
+import { HomeStart } from "./website/HomeStart";
+import { GameLengthControl } from "./website/GameLengthControl";
 import { PackControl } from "./website/PackControl";
-import { gamePeriodCount, packDefaultPeriods, packLengths, type Pack } from "./website/packs";
+import { gamePeriodCount, packDefaultPeriods, type Pack } from "./website/packs";
 import { SpectatorHeader } from "./website/SpectatorHeader";
 import "./website/spectator.css";
 import { RightsIssueScreen } from "./RightsIssueScreen";
@@ -10,7 +12,7 @@ import { ConvexError } from "convex/values";
 import { tv } from "./api";
 import type { Board } from "./api";
 import { Dashboard, Feed, JoinCard } from "./Dashboard";
-import { newLobby, readRecent, remember } from "./storage";
+import { pendingLobbyToken, clearPendingLobby, readRecent, remember } from "./storage";
 import type { Recent } from "./storage";
 import { useRemote } from "./remote";
 import { asset, portrait } from "./assets";
@@ -43,24 +45,6 @@ function CodeKeyboard({ onOpen, onCancel }: { onOpen: (code: string) => void; on
     </section>;
 }
 
-function GameLengthControl({ periods, pack, busy, onChange }: {
-    periods: number; pack?: Pack; busy: boolean; onChange: (periods: number) => void;
-}) {
-    const lengths = packLengths(pack);
-    const index = lengths.indexOf(periods);
-    const fewer = lengths[index - 1];
-    const more = index >= 0 ? lengths[index + 1] : undefined;
-    return <div className="game-length-stepper" role="group" aria-label="Game length">
-        <button type="button" className="btn bg-dark" aria-label="Fewer periods" aria-disabled={busy || fewer === undefined}
-            onClick={() => { if (!busy && fewer !== undefined) onChange(fewer); }}>−</button>
-        <div className="game-length-value bg-white text-black rounded" role="status">
-            <strong>{periods}</strong><span>periods</span>
-        </div>
-        <button type="button" className="btn bg-dark" aria-label="More periods" aria-disabled={busy || more === undefined}
-            onClick={() => { if (!busy && more !== undefined) onChange(more); }}>+</button>
-    </div>;
-}
-
 function DashboardScreen({ board, phoneUrl, token, onStart, onSetLength, onPack, busy, error, onBack }: {
     board: Board; phoneUrl: string; token?: string; onStart: () => void; busy: boolean; error: string; onBack: () => void;
     onNext?: () => void; onSetLength?: (periods: number) => void; onPack?: (pack: Pack) => void;
@@ -84,7 +68,7 @@ function DashboardScreen({ board, phoneUrl, token, onStart, onSetLength, onPack,
                 </div>
                 <PackControl pack={game.pack} busy={busy} onChange={onPack}/>
                 <div className="game-length"><p>Game length</p>
-                    {onSetLength ? <GameLengthControl periods={periods} pack={game.pack} busy={busy} onChange={onSetLength}/>
+                    {onSetLength ? <GameLengthControl periods={periods} pack={game.pack} busy={busy} retainFocus onChange={onSetLength}/>
                         : <span className="length-value bg-dark rounded">{periods} periods</span>}
                 </div>
                 {error ? <p className="error" role="alert">{error}</p> : null}
@@ -112,7 +96,7 @@ export function GameScreen(props: Parameters<typeof DashboardScreen>[0]) {
     return <>
         {board.game.status === "finished" ? <main className="tv-results"><GameResults board={resultsBoard(board)} onBack={props.onBack}/></main>
             : board.reveal ? <ConnectedRoundPresentation key={`${board.game.code}-${board.game.currentPeriod}`} snapshot={board}
-                canAdvance={Boolean(props.token)} onNext={props.onNext ?? (() => {})} busy={props.busy} error={props.error}
+                forceWide canAdvance={Boolean(props.token)} onNext={props.onNext ?? (() => {})} busy={props.busy} error={props.error}
                 onBack={props.onBack}/>
                 : <DashboardScreen {...props}/>}
         <PlayAnimation key={`actions-${board.game.code}`} board={board}/>
@@ -150,24 +134,26 @@ export function App({ phoneUrl }: { phoneUrl: string }) {
     const [mode, setMode] = useState("home");
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState("");
-    const [draft, setDraft] = useState(newLobby);
-    const [pack, setPack] = useState<Pack>("classic");
     const connection = useConvexConnectionState();
     const create = useMutation(tv.create);
     const back = useCallback(() => { setEntry(null); setMode("home"); setError(""); }, []);
     useRemote(back, entry?.code ?? mode);
     function open(next: Recent) {
-        try { setRecent(remember(next)); setEntry(next); setError(""); }
-        catch { setError("Device storage is unavailable. Enable storage before creating a lobby."); }
+        try {
+            setRecent(remember(next)); setEntry(next); setError("");
+            return true;
+        } catch {
+            setError("Device storage is unavailable. Enable storage before creating a lobby.");
+            return false;
+        }
     }
     async function createGame() {
         setBusy(true); setError("");
         try {
             // Persist the capability before the request, so a lost response can be retried safely.
-            setRecent(remember(draft));
-            const code = await create({ ...draft, periodCount: packDefaultPeriods(pack) - 1, pack });
-            open({ ...draft, code });
-            setDraft(newLobby());
+            const token = pendingLobbyToken();
+            const code = await create({ token, periodCount: packDefaultPeriods() - 1 });
+            if (open({ token, code })) clearPendingLobby();
         } catch (err) { setError(errorMessage(err)); }
         finally { setBusy(false); }
     }
@@ -185,18 +171,15 @@ export function App({ phoneUrl }: { phoneUrl: string }) {
                     <button className="btn btn-secondary" onClick={back}>Back</button>
                 </> : mode === "watch" ? <CodeKeyboard onCancel={back} onOpen={(code) => open(recent.find((item) => item.code === code) ?? { code })}/> : <>
                     <div className="home-content card-body">
-                        <section className="home-controls bg-dark rounded"><PackControl pack={pack} busy={busy} onChange={setPack}/>
-                            <button className="btn btn-primary create" disabled={busy || !connection.isWebSocketConnected} onClick={() => void createGame()}><img src={asset("/static/imgs/icons/Handshake.svg")} alt=""/>{busy ? "Creating game…" : "Create game"}</button>
-                            {error ? <p className="error" role="alert">{error}</p> : null}
-                        </section>
                         <section className="home-controls bg-dark rounded"><h2>Watch game</h2><p>Enter a lobby code to watch an existing or finished game.</p><button className="btn btn-primary" disabled={busy} onClick={() => { setMode("watch"); setError(""); }}><img src={asset("/static/imgs/icons/Stock.svg")} alt=""/>Enter lobby code</button></section>
+                        <HomeStart busy={busy} disabled={!connection.isWebSocketConnected} onCreate={() => void createGame()}/>
                     </div>
+                    {error ? <p className="error text-center" role="alert">{error}</p> : null}
                     {recent.length ? <section className="recents"><h3>Recent games</h3><div>{recent.map((item) => <button className="btn bg-dark" key={item.code} disabled={busy} onClick={() => open(item)}>{item.code.toUpperCase()}</button>)}</div></section> : null}
                     <p className="home-hint">Create a game with your remote, then scan the QR code to join on your phone.</p>
-                    <div className="home-information"><p>4–6 players · Phones and internet required · Fictional money</p>
-                        <button className="btn btn-secondary" onClick={() => setMode("privacy")}>Privacy &amp; support</button></div>
+                    <div className="home-information"><p>4–6 players · Phones and internet required · Fictional money</p></div>
                 </>}
-            </div><footer><span>Stockmarket! · TV</span><span>↑ ↓ ← → Navigate · OK Select</span></footer>
+            </div><footer><span>Stockmarket! · TV</span>{mode === "home" && <button className="btn btn-secondary" onClick={() => setMode("privacy")}>Privacy &amp; support</button>}</footer>
         </main>}</Boundary>
     </>;
 }

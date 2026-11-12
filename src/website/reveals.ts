@@ -1,9 +1,10 @@
 import { cashStock, cashStockKey, chanceStockKey } from "./chance-cards";
-import type { Stock as DisplayStock } from "./types";
-import type { Insight, Stock } from "./types";
 
-export function revealStocks<T extends Pick<Stock, "key" | "display">>(
-    stocks: T[], insights: Pick<Insight, "stockKey">[])
+interface RevealStock { key: number; display: boolean }
+interface RevealInsight { stockKey: number }
+
+export function revealStocks<T extends RevealStock>(
+    stocks: T[], insights: RevealInsight[])
 {
     return [
         ...stocks.filter((stock) => stock.display),
@@ -12,7 +13,7 @@ export function revealStocks<T extends Pick<Stock, "key" | "display">>(
 }
 
 /** Cash is always the last reveal, including rounds with no cash cards. */
-export function revealGroups(stocks: DisplayStock[], insights: Pick<Insight, "stockKey">[])
+export function revealGroups<T extends RevealStock>(stocks: T[], insights: RevealInsight[])
 {
     if (stocks.length === 0 && insights.length === 0)
     {

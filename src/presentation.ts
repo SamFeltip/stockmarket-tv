@@ -6,7 +6,7 @@ export function websiteBoard(board: Board): WebsiteBoard {
     const reveal = board.reveal;
     if (!reveal) throw new Error("Round insights are not public yet");
     return {
-        game: { ...board.game, prices: reveal.prices, suspended: reveal.suspended, targetedSuspensions: reveal.targetedSuspensions, suspensionPeriod: reveal.suspensionPeriod, priceHistory: board.history },
+        game: { ...board.game, prices: reveal.prices, suspended: reveal.suspended, targetedSuspensions: reveal.targetedSuspensions, revealProgress: reveal.revealProgress, suspensionPeriod: reveal.suspensionPeriod, priceHistory: board.history },
         stocks: reveal.stocks.map((stock) => ({ ...stock, imagePath: asset(stock.imagePath), secondaryImagePath: asset(stock.secondaryImagePath) })),
         insights: reveal.insights,
         trades: (board.trades ?? reveal.trades)?.map((trade) => ({ ...trade, imageRoot: portrait(trade.imageRoot) })),

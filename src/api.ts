@@ -12,7 +12,7 @@ export type PublicReveal = {
     period: number;
     trades?: ChartTrade[];
     prices: { stockKey: number; value: number }[];
-    suspended: number[]; suspensionPeriod?: number;
+    suspended: number[]; suspensionPeriod?: number; revealProgress?: { step: number; summary: boolean };
     targetedSuspensions?: { stockKey: number; playerIds: string[] }[];
     stocks: { key: number; name: string; display: boolean; imagePath: string; secondaryImagePath: string; variation?: number }[];
     insights: { _id: string; playerId: string; stockKey: number; value: number; description: string; resolved: boolean;
@@ -38,7 +38,7 @@ export type Board = {
 
 export const tv = {
     board: makeFunctionReference<"query", { code: string }, Board | null>("tv:board"),
-    create: makeFunctionReference<"mutation", { code: string; periodCount: number; token: string; pack?: Pack }, string>("tv:create"),
+    create: makeFunctionReference<"mutation", { code?: string; periodCount: number; token: string; pack?: Pack }, string>("tv:create"),
     setLength: makeFunctionReference<"mutation", { code: string; token: string; periodCount: number }, null>("tv:setLength"),
     setPack: makeFunctionReference<"mutation", { code: string; token: string; pack: Pack }, null>("tv:setPack"),
     next: makeFunctionReference<"mutation", { code: string; token: string; expectedPeriod: number }, null>("tv:next"),
@@ -46,6 +46,7 @@ export const tv = {
 };
 
 export const rounds = {
+    moveReveal: makeFunctionReference<"mutation", { code: string; expectedPeriod: number; step: number; summary: boolean }, null>("rounds:moveReveal"),
     beginSuspensions: makeFunctionReference<"mutation", { code: string; expectedPeriod: number }, null>("rounds:beginSuspensions"),
     skipSuspension: makeFunctionReference<"mutation", { code: string; expectedPeriod: number; insightId: string }, null>("rounds:skipSuspension"),
 };

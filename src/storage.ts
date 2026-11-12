@@ -19,10 +19,20 @@ export function remember(entry: Recent) {
     localStorage.setItem(key, JSON.stringify(next));
     return next;
 }
-export function newLobby() {
+const pendingKey = `${key}:pending-token`;
+
+export function pendingLobbyToken() {
+    const saved = localStorage.getItem(pendingKey);
+    if (saved && /^[a-f0-9]{64}$/.test(saved)) return saved;
+
     const bytes = crypto.getRandomValues(new Uint8Array(32));
-    return { code: `tv-${[...bytes.slice(0, 4)].map((b) => b.toString(16).padStart(2, "0")).join("")}`,
-        token: [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("") };
+    const token = [...bytes].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    localStorage.setItem(pendingKey, token);
+    return token;
+}
+
+export function clearPendingLobby() {
+    localStorage.removeItem(pendingKey);
 }
 export function joinUrl(base: string, code: string) {
     const url = new URL(base);
