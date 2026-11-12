@@ -23,6 +23,14 @@ export function directionalTarget(boxes: Box[], current: number, key: string) {
     return best;
 }
 
+export function homeActionTarget(current: number, key: string, actions: number[], firstRecent: number) {
+    const action = actions.indexOf(current);
+    if (action < 0) return undefined;
+    if (key === "ArrowDown" && firstRecent >= 0) return firstRecent;
+    if (key === "ArrowLeft") return actions[Math.max(0, action - 1)];
+    if (key === "ArrowRight") return actions[Math.min(actions.length - 1, action + 1)];
+}
+
 export function useRemote(onBack: () => void, screen: string) {
     useEffect(() => {
         document.documentElement.dataset.tvScreen = screen;
@@ -72,9 +80,13 @@ export function useRemote(onBack: () => void, screen: string) {
             // Text fields accept normal typing; D-pad can still leave them in any direction.
             const elements = visible();
             const current = elements.indexOf(document.activeElement as HTMLElement);
-            const index = directionalTarget(elements.map((el) => el.getBoundingClientRect()), current, event.key);
-            event.preventDefault(); elements[index]?.focus();
-            elements[index]?.scrollIntoView({ block: "nearest", inline: "nearest" });
+            const actions = elements.flatMap((el, index) => el.closest(".home-content") ? [index] : []);
+            const index = homeActionTarget(current, event.key, actions, elements.findIndex((el) => el.closest(".recents")))
+                ?? directionalTarget(elements.map((el) => el.getBoundingClientRect()), current, event.key);
+            const target = elements[index];
+            event.preventDefault();
+            target?.focus();
+            target?.scrollIntoView({ block: "nearest", inline: "nearest" });
         };
         document.addEventListener("keydown", handler);
         return () => { cancelAnimationFrame(frame); observer.disconnect(); document.removeEventListener("keydown", handler); };
