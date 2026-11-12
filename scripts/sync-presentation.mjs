@@ -27,7 +27,7 @@ await writeFile(new URL("rights-issue.ts", target), await readSharedRule("rights
 await writeFile(new URL("company-roles.ts", target), (await readSharedRule("company-roles.ts")).replaceAll('.toSorted(', '.slice().sort('));
 await writeFile(new URL("rules.ts", target), await readSharedRule("rules.ts"));
 await writeFile(new URL("packs.ts", target), await readSharedRule("packs.ts"));
-for (const style of ["rights-issue.css", "trade-inputs.css", "portfolio-table.css", "spectator-header.css", "rights-spectator-desktop.css", "pack-control.css", "play-style-card.css", "game-length.css"]) {
+for (const style of ["rights-issue.css", "trade-inputs.css", "portfolio-table.css", "spectator-header.css", "rights-spectator-desktop.css", "pack-control.css", "play-style-card.css", "game-length.css", "insight-reveal.css"]) {
     await writeFile(new URL(style, target), await readFile(new URL(`src/${style}`, source)));
 }
 await writeFile(new URL("share-suspended.css", target), await readFile(new URL("src/share-suspended.css", source)));

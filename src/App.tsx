@@ -1,5 +1,5 @@
 import { PackControl } from "./website/PackControl";
-import { packDefaultPeriods, packLengths, packPeriods, type Pack } from "./website/packs";
+import { gamePeriodCount, packDefaultPeriods, packLengths, type Pack } from "./website/packs";
 import { SpectatorHeader } from "./website/SpectatorHeader";
 import "./website/spectator.css";
 import { RightsIssueScreen } from "./RightsIssueScreen";
@@ -67,7 +67,7 @@ function DashboardScreen({ board, phoneUrl, token, onStart, onSetLength, onPack,
 }) {
     const { game } = board;
     const waiting = game.status === "waiting";
-    const periods = packPeriods(game.pack, game.periodCount + 1);
+    const periods = gamePeriodCount(game);
     if (waiting) return <main className="website-lobby">
         <div className="container-fluid rounded lobby-surface">
             <section className="lobby-main">

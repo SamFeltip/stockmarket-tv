@@ -14,13 +14,14 @@ export type PublicReveal = {
     suspended: number[]; suspensionPeriod?: number;
     stocks: { key: number; name: string; display: boolean; imagePath: string; secondaryImagePath: string; variation?: number }[];
     insights: { _id: string; playerId: string; stockKey: number; value: number; description: string; resolved: boolean;
-        chanceKind?: "rights" | "hold" | "loan" | "debenture" | "option"; used?: boolean; period?: number; bonusRole?: CompanyRole; removedInsightId?: string }[];
+        chanceKind?: "rights" | "hold" | "loan" | "debenture" | "option"; used?: boolean; period?: number; bonusRole?: CompanyRole; removedInsightId?: string;
+        forecast?: { from: number; to: number }; marketSteps?: number[] }[];
 };
 export type Board = {
     reveal?: PublicReveal | null;
     latestPurchase: { title: string; message: string } | null;
     game: { code: string; status: "waiting" | "playing" | "closed" | "special_insights" | "finished";
-        pack?: Pack; tradingDates?: { from: string; to: string };
+        pack?: Pack; tradingDates?: { from: string; to: string; boundaries?: string[]; dailyCloses?: string[][] };
         rightsIssue?: RightsIssue; tvControlled?: boolean; currentPeriod: number; periodCount: number; turn: number; currentPlayerId?: string };
     stocks: { key: number; name: string; imagePath?: string; secondaryImagePath?: string; startingValue: number; value: number; held: number }[];
     players: { id: string; name: string; profileRoot?: string; cash: number; netWorth: number;
