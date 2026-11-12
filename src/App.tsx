@@ -1,4 +1,7 @@
-import { GameMetrics } from "./website/GameMetrics";
+import { PackControl } from "./website/PackControl";
+import { gamePeriodCount, packDefaultPeriods, packLengths, type Pack } from "./website/packs";
+import { SpectatorHeader } from "./website/SpectatorHeader";
+import "./website/spectator.css";
 import { RightsIssueScreen } from "./RightsIssueScreen";
 import { Component, useCallback, useState } from "react";
 import type { ReactNode } from "react";
@@ -15,7 +18,6 @@ import { PlayAnimation } from "./PlayAnimation";
 import { ConnectedRoundPresentation } from "./RoundPresentation";
 import { resultsBoard } from "./presentation";
 import { GameResults } from "./website/GameResults";
-import { gameLengths } from "./website/rules";
 import privacy from "./privacy.json";
 
 export function errorMessage(error: unknown) {
@@ -41,12 +43,13 @@ function CodeKeyboard({ onOpen, onCancel }: { onOpen: (code: string) => void; on
     </section>;
 }
 
-function GameLengthControl({ periods, busy, onChange }: {
-    periods: number; busy: boolean; onChange: (periods: number) => void;
+function GameLengthControl({ periods, pack, busy, onChange }: {
+    periods: number; pack?: Pack; busy: boolean; onChange: (periods: number) => void;
 }) {
-    const index = gameLengths.indexOf(periods);
-    const fewer = gameLengths[index - 1];
-    const more = index >= 0 ? gameLengths[index + 1] : undefined;
+    const lengths = packLengths(pack);
+    const index = lengths.indexOf(periods);
+    const fewer = lengths[index - 1];
+    const more = index >= 0 ? lengths[index + 1] : undefined;
     return <div className="game-length-stepper" role="group" aria-label="Game length">
         <button type="button" className="btn bg-dark" aria-label="Fewer periods" aria-disabled={busy || fewer === undefined}
             onClick={() => { if (!busy && fewer !== undefined) onChange(fewer); }}>−</button>
@@ -58,12 +61,13 @@ function GameLengthControl({ periods, busy, onChange }: {
     </div>;
 }
 
-function DashboardScreen({ board, phoneUrl, token, onStart, onSetLength, busy, error, onBack }: {
+function DashboardScreen({ board, phoneUrl, token, onStart, onSetLength, onPack, busy, error, onBack }: {
     board: Board; phoneUrl: string; token?: string; onStart: () => void; busy: boolean; error: string; onBack: () => void;
-    onNext?: () => void; onSetLength?: (periods: number) => void;
+    onNext?: () => void; onSetLength?: (periods: number) => void; onPack?: (pack: Pack) => void;
 }) {
     const { game } = board;
     const waiting = game.status === "waiting";
+    const periods = gamePeriodCount(game);
     if (waiting) return <main className="website-lobby">
         <div className="container-fluid rounded lobby-surface">
             <section className="lobby-main">
@@ -78,9 +82,10 @@ function DashboardScreen({ board, phoneUrl, token, onStart, onSetLength, busy, e
                         <img src={asset("/static/imgs/icons/Handshake.svg")} alt=""/><p>Scan to join the game</p>
                     </div> : null}
                 </div>
+                <PackControl pack={game.pack} busy={busy} onChange={onPack}/>
                 <div className="game-length"><p>Game length</p>
-                    {onSetLength ? <GameLengthControl periods={game.periodCount + 1} busy={busy} onChange={onSetLength}/>
-                        : <span className="length-value bg-dark rounded">{game.periodCount + 1} periods</span>}
+                    {onSetLength ? <GameLengthControl periods={periods} pack={game.pack} busy={busy} onChange={onSetLength}/>
+                        : <span className="length-value bg-dark rounded">{periods} periods</span>}
                 </div>
                 {error ? <p className="error" role="alert">{error}</p> : null}
                 <div className="lobby-actions"><button className="btn btn-secondary" onClick={onBack}>Back</button>
@@ -92,28 +97,13 @@ function DashboardScreen({ board, phoneUrl, token, onStart, onSetLength, busy, e
             <div className="lobby-footer"><span className="website-title">Stockmarket!</span><span>↑ ↓ ← → Navigate · OK Select · Back Home</span></div>
         </div>
     </main>;
-    const current = game.status === "playing" ? board.players.find((player) => player.id === game.currentPlayerId) : undefined;
-    return <div className="game-screen">
-        <header className="game-header tv-game-header" aria-label="Spectator game header">
-            <div className="card card-green current-player" role="status">
-                {current && <img src={portrait(current.profileRoot)} alt=""/>}
-                <div>
-                    <p>Current player</p>
-                    <strong>{current?.name ?? "—"}</strong>
-                </div>
-            </div>
-            <div className="card card-green turn-heading">
-                <GameMetrics board={resultsBoard(board)}/>
-            </div>
-            <div className="card card-green title-heading">
-                <h1 id="stockmarket-header">Stockmarket!</h1>
-            </div>
-        </header>
+    return <div className="web-spectator tv-spectator"><main className="game-screen">
+        <SpectatorHeader board={resultsBoard(board)}/>
         <div className="game-layout"><Dashboard board={board} phoneUrl={phoneUrl}/><div className="sidebar">
             <Feed board={board}/>
             {error ? <p className="error" role="alert">{error}</p> : null}<button className="btn btn-secondary" onClick={onBack}>Back</button>
         </div></div><footer><span>Stockmarket! · Spectator view</span><span>↑ ↓ ← → Navigate · OK Select · Back Home</span></footer>
-    </div>;
+    </main></div>;
 }
 
 export function GameScreen(props: Parameters<typeof DashboardScreen>[0]) {
@@ -134,6 +124,7 @@ function LiveBoard({ entry, phoneUrl, onBack }: { entry: Recent; phoneUrl: strin
     const board = useQuery(tv.board, { code: entry.code });
     const start = useMutation(tv.start);
     const setLength = useMutation(tv.setLength);
+    const setPack = useMutation(tv.setPack);
     const next = useMutation(tv.next);
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState("");
@@ -148,6 +139,7 @@ function LiveBoard({ entry, phoneUrl, onBack }: { entry: Recent; phoneUrl: strin
     return <GameScreen board={board} phoneUrl={phoneUrl} token={token} busy={busy} error={error} onBack={onBack}
         onNext={() => { if (token) run(() => next({ code: entry.code, token, expectedPeriod: board.game.currentPeriod })); }}
         onStart={() => { if (token) run(() => start({ code: entry.code, token })); }}
+        onPack={token ? (pack) => run(() => setPack({ code: entry.code, token, pack })) : undefined}
         onSetLength={token ? (periods) => run(() => setLength({ code: entry.code, token, periodCount: periods - 1 })) : undefined}
     />;
 }
@@ -159,6 +151,7 @@ export function App({ phoneUrl }: { phoneUrl: string }) {
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState("");
     const [draft, setDraft] = useState(newLobby);
+    const [pack, setPack] = useState<Pack>("classic");
     const connection = useConvexConnectionState();
     const create = useMutation(tv.create);
     const back = useCallback(() => { setEntry(null); setMode("home"); setError(""); }, []);
@@ -172,7 +165,7 @@ export function App({ phoneUrl }: { phoneUrl: string }) {
         try {
             // Persist the capability before the request, so a lost response can be retried safely.
             setRecent(remember(draft));
-            const code = await create({ ...draft, periodCount: gameLengths[0] - 1 });
+            const code = await create({ ...draft, periodCount: packDefaultPeriods(pack) - 1, pack });
             open({ ...draft, code });
             setDraft(newLobby());
         } catch (err) { setError(errorMessage(err)); }
@@ -192,7 +185,7 @@ export function App({ phoneUrl }: { phoneUrl: string }) {
                     <button className="btn btn-secondary" onClick={back}>Back</button>
                 </> : mode === "watch" ? <CodeKeyboard onCancel={back} onOpen={(code) => open(recent.find((item) => item.code === code) ?? { code })}/> : <>
                     <div className="home-content card-body">
-                        <section className="home-controls bg-dark rounded"><h2>Create a game</h2><p>Choose the game length in the lobby.</p>
+                        <section className="home-controls bg-dark rounded"><PackControl pack={pack} busy={busy} onChange={setPack}/>
                             <button className="btn btn-primary create" disabled={busy || !connection.isWebSocketConnected} onClick={() => void createGame()}><img src={asset("/static/imgs/icons/Handshake.svg")} alt=""/>{busy ? "Creating game…" : "Create game"}</button>
                             {error ? <p className="error" role="alert">{error}</p> : null}
                         </section>

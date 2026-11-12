@@ -1,4 +1,6 @@
-import { floorTradeQuantity, validTradeQuantity } from "./rules";
+import { roundMoney, sharesForCash, validTradeQuantity } from "./rules";
+
+export { sharesForCash };
 
 export function tradeUnavailableReason({ mode, price, quantity, available, held, cash, isTurn, isPlaying, tradable }: {
     mode: "buy" | "sell"; price: number; quantity: number; available: number; held: number; cash: number;
@@ -63,17 +65,6 @@ export function tradeUnavailableReason({ mode, price, quantity, available, held,
     return "";
 }
 
-export function sharesForCash(cash: number, price: number)
-{
-    if (!Number.isFinite(cash) || !Number.isFinite(price) || cash <= 0 || price <= 0)
-    {
-        return 0;
-    }
-
-    // Small tolerance avoids losing a lot to floating-point currency rounding.
-    return floorTradeQuantity((cash + 0.000_001) / price);
-}
-
 export function stepShares(quantity: number, direction: 1 | -1)
 {
     const current = Number.isFinite(quantity) ? Math.max(0, quantity) : 0;
@@ -92,7 +83,7 @@ export function resolveTradeDraft(draft: TradeDraft, price: number, limit: numbe
     const entered = Number(draft.value);
     const quantity = draft.field === "cash"
         ? Math.min(limit, sharesForCash(entered, price)) : entered;
-    const cost = Number.isFinite(quantity * price) ? Number((quantity * price).toFixed(2)) : 0;
+    const cost = Number.isFinite(quantity * price) ? roundMoney(quantity * price) : 0;
 
     return {
         quantity,

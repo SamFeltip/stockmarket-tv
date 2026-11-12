@@ -8,20 +8,22 @@ import { newPlayEvents } from "./presentation";
 
 export function PlayAnimation({ board, preview = false }: { board: Board; preview?: boolean }) {
     const newest = board.feed[0];
+    const revealing = board.game.status === "closed" || board.game.status === "special_insights";
     const [state, setState] = useState(() => ({ id: newest?.id, at: newest?.at ?? -Infinity,
         queue: preview && newest ? [newest] : [] as Board["feed"] }));
-    if (newest?.id !== state.id) {
-        setState({ id: newest?.id, at: newest?.at ?? -Infinity,
-            queue: [...state.queue, ...newPlayEvents(board, state.id, state.at)] });
+    if (newest?.id !== state.id || (revealing && state.queue.length > 1)) {
+        const queue = [...state.queue, ...newPlayEvents(board, state.id, state.at)];
+        setState({ id: newest?.id, at: newest?.at ?? -Infinity, queue: revealing ? queue.slice(-1) : queue });
     }
     const active = state.queue[0];
     const activeId = active?.id;
+    const expiresAt = revealing && active ? active.at + actionAnimationMs : undefined;
     useEffect(() => {
         if (!activeId) return;
         const timer = window.setTimeout(() => setState((old) => old.queue[0]?.id === activeId
-            ? { ...old, queue: old.queue.slice(1) } : old), actionAnimationMs);
+            ? { ...old, queue: old.queue.slice(1) } : old), expiresAt === undefined ? actionAnimationMs : Math.max(0, expiresAt - Date.now()));
         return () => window.clearTimeout(timer);
-    }, [activeId]);
+    }, [activeId, expiresAt]);
     if (!active) return null;
     const player = board.players.find((candidate) => candidate.name === active.title);
     return <div key={active.id} id="play-notif" className="play-notification d-flex justify-content-center align-items-center" role="status" aria-live="polite">

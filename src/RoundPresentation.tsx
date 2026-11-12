@@ -1,3 +1,5 @@
+import { nextRoundLabel } from "./website/pack-presentation";
+import { insightRevealMs } from "./website/timing";
 import { useMutation } from "convex/react";
 import { pendingSuspensions } from "./website/suspensions";
 import { ShareSuspended } from "./website/ShareSuspended";
@@ -44,6 +46,7 @@ export function RoundPresentation({ snapshot, canAdvance = true, onNext, busy, e
     const lastPlay = snapshot.feed.find((item) => item.period === snapshot.game.currentPeriod
       && item.colour !== "grey" && (item.quantity || item.cashBonus || item.message === "passed their go"));
     const ready = useRevealReady(lastPlay?.at);
+    const revealMs = insightRevealMs(board.game.pack);
     const pendingHolds = board.insights.some((insight) => !insight.resolved
       && board.stocks.find((item) => item.key === insight.stockKey)?.name === "Hold Stock Price");
     const { preview, wealth } = roundProgress(board, reviewed ? groups.length : step, index);
@@ -58,10 +61,10 @@ export function RoundPresentation({ snapshot, canAdvance = true, onNext, busy, e
             return;
         }
 
-        const timer = globalThis.setTimeout(() => setIndex((current) => current + 1), 2500);
+        const timer = globalThis.setTimeout(() => setIndex((current) => current + 1), revealMs);
 
         return () => globalThis.clearTimeout(timer);
-    }, [index, visible.length, unresolved, step, reviewed, ready]);
+    }, [index, visible.length, unresolved, step, reviewed, ready, revealMs]);
 
     if (!ready)
     {
@@ -172,7 +175,7 @@ export function RoundPresentation({ snapshot, canAdvance = true, onNext, busy, e
                             {pendingHolds && <p>Waiting for players to resolve their hold-stock insights.</p>}
                             {canAdvance ? (
                             <button className="btn btn-primary" disabled={busy || pendingHolds || !canAdvance} onClick={onNext}>
-                                {busy ? "Starting…" : (board.game.currentPeriod >= board.game.periodCount ? "Finish Game" : "Next Period")}
+                                {busy ? "Starting…" : nextRoundLabel(board.game)}
                                 {" "}
                                 →
                             </button>
